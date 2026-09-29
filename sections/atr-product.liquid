@@ -1,0 +1,580 @@
+{%- comment -%}
+  Atramenti Produktseite.
+
+  Gestaltungsgedanke: Ein Parfum ist eine Komposition in drei Saetzen —
+  Kopf, Herz, Basis — die sich auf der Haut nacheinander oeffnet. Genau das
+  traegt die Seite: Die drei Noten stehen auf je einer Haarlinie, und der
+  eingefaerbte Anteil dieser Linie waechst von Kopf zu Basis. Fluechtig oben,
+  bleibend unten. Das ist das einzige gestalterische Mittel der Seite; alles
+  andere bleibt still.
+
+  Die Noten kommen aus Metafeldern (Namespace "atramenti"). Fehlen sie,
+  faellt die Sektion sauber auf die Beschreibung zurueck.
+{%- endcomment -%}
+
+{%- liquid
+  assign variant = product.selected_or_first_available_variant
+  assign mf = product.metafields.atramenti
+  assign kopf = mf.kopfnote.value | default: mf.kopfnote
+  assign herz = mf.herznote.value | default: mf.herznote
+  assign basis = mf.basisnote.value | default: mf.basisnote
+  assign familie = mf.duftfamilie.value | default: mf.duftfamilie
+  assign tagline = mf.tagline.value | default: mf.tagline
+
+  assign spec = variant.title
+  if product.has_only_default_variant or spec == 'Default Title'
+    assign spec = section.settings.spec_fallback
+  endif
+
+  assign has_notes = false
+  if kopf != blank or herz != blank or basis != blank
+    assign has_notes = true
+  endif
+-%}
+
+<article class="atr-scope atr-pdp">
+  {%- comment -%} 1. Flakon und Kauf {%- endcomment -%}
+  <div class="atr-container atr-pdp__head">
+    <div class="atr-pdp__gallery">
+      {%- if product.media.size > 0 -%}
+        {%- for media in product.media limit: 4 -%}
+          <figure class="atr-pdp__shot">
+            {{
+              media.preview_image
+              | image_url: width: 1400
+              | image_tag:
+                loading: forloop.first | default: false,
+                sizes: '(min-width: 900px) 52vw, 100vw',
+                widths: '400,600,900,1200,1400',
+                alt: media.alt | default: product.title
+            }}
+          </figure>
+        {%- endfor -%}
+      {%- else -%}
+        <figure class="atr-pdp__shot atr-pdp__shot--empty" aria-hidden="true"></figure>
+      {%- endif -%}
+    </div>
+
+    <div class="atr-pdp__buy">
+      <h1 class="atr-pdp__name">{{ product.title }}</h1>
+
+      {%- if tagline != blank -%}
+        <p class="atr-pdp__tagline">{{ tagline }}</p>
+      {%- endif -%}
+
+      <p class="atr-pdp__price" data-atr-price>{{ variant.price | money }}</p>
+
+      <p class="atr-pdp__spec">
+        {{ spec }}
+        {%- if section.settings.spec_suffix != blank %} {{ section.settings.spec_suffix }}{% endif -%}
+      </p>
+
+      {%- form 'product', product, class: 'atr-pdp__form' -%}
+        {%- if product.variants.size > 1 -%}
+          <label class="atr-pdp__varlabel" for="atr-variant-{{ section.id }}">Groesse</label>
+          <select
+            id="atr-variant-{{ section.id }}"
+            name="id"
+            class="atr-pdp__variants"
+            data-atr-variants
+          >
+            {%- for v in product.variants -%}
+              <option
+                value="{{ v.id }}"
+                data-price="{{ v.price | money }}"
+                {% if v == variant %}selected{% endif %}
+                {% unless v.available %}disabled{% endunless %}
+              >
+                {{ v.title }}{% unless v.available %} — ausverkauft{% endunless %}
+              </option>
+            {%- endfor -%}
+          </select>
+        {%- else -%}
+          <input type="hidden" name="id" value="{{ variant.id }}">
+        {%- endif -%}
+
+        <button
+          type="submit"
+          name="add"
+          class="atr-btn atr-btn--solid atr-pdp__add"
+          data-atr-add
+          {% unless product.available %}disabled{% endunless %}
+        >
+          {% if product.available %}In den Warenkorb legen{% else %}Ausverkauft{% endif %}
+        </button>
+      {%- endform -%}
+
+      {%- if familie != blank -%}
+        <p class="atr-pdp__family">{{ familie }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%} 2. Die Komposition {%- endcomment -%}
+  <section class="atr-pdp__composition">
+    <div class="atr-container atr-pdp__composition-inner">
+      {%- if product.description != blank -%}
+        <div class="atr-pdp__prose">{{ product.description }}</div>
+      {%- endif -%}
+
+      {%- if has_notes -%}
+        <div class="atr-pdp__structure">
+        <div class="atr-pdp__notes">
+          {%- if kopf != blank -%}
+            <div class="atr-pdp__note" style="--atr-persist: 22%">
+              <span class="atr-pdp__phase">Kopf</span>
+              <span class="atr-pdp__value">{{ kopf }}</span>
+            </div>
+          {%- endif -%}
+          {%- if herz != blank -%}
+            <div class="atr-pdp__note" style="--atr-persist: 58%">
+              <span class="atr-pdp__phase">Herz</span>
+              <span class="atr-pdp__value">{{ herz }}</span>
+            </div>
+          {%- endif -%}
+          {%- if basis != blank -%}
+            <div class="atr-pdp__note" style="--atr-persist: 100%">
+              <span class="atr-pdp__phase">Basis</span>
+              <span class="atr-pdp__value">{{ basis }}</span>
+            </div>
+          {%- endif -%}
+        </div>
+        <p class="atr-pdp__legend">{{ section.settings.legend }}</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+
+  {%- comment -%} 3. Das Kleingedruckte, ohne Kleingedruckt-Gefuehl {%- endcomment -%}
+  {%- if section.settings.note_1 != blank or section.settings.note_2 != blank or section.settings.note_3 != blank -%}
+    <section class="atr-pdp__details">
+      <div class="atr-container atr-pdp__details-inner">
+        {%- for i in (1..3) -%}
+          {%- liquid
+            case i
+              when 1
+                assign txt = section.settings.note_1
+              when 2
+                assign txt = section.settings.note_2
+              when 3
+                assign txt = section.settings.note_3
+            endcase
+          -%}
+          {%- if txt != blank -%}
+            <p class="atr-pdp__detail">{{ txt }}</p>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- comment -%} 4. Die anderen Duefte — bei drei Stueck echte Navigation {%- endcomment -%}
+  {%- assign siblings = collections[section.settings.collection].products -%}
+  {%- if siblings.size > 1 -%}
+    <section class="atr-pdp__siblings">
+      <div class="atr-container atr-pdp__siblings-inner">
+        <p class="atr-pdp__siblings-lead">{{ section.settings.siblings_lead }}</p>
+        <ul class="atr-pdp__siblings-list">
+          {%- for p in siblings -%}
+            {%- unless p.handle == product.handle -%}
+              <li>
+                <a href="{{ p.url }}" class="atr-pdp__sibling">
+                  <span class="atr-pdp__sibling-name">{{ p.title }}</span>
+                  {%- assign p_tag = p.metafields.atramenti.tagline.value | default: p.metafields.atramenti.tagline -%}
+                  {%- if p_tag != blank -%}
+                    <span class="atr-pdp__sibling-tag">{{ p_tag }}</span>
+                  {%- endif -%}
+                </a>
+              </li>
+            {%- endunless -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+    </section>
+  {%- endif -%}
+</article>
+
+<style>
+  /* ---------------------------------------------------------------
+     Die Seite lebt auf zwei Papiertoenen: Der Kauf steht auf Weiss,
+     die Komposition auf Sand — wie ein Blatt, das auf dem Tisch liegt.
+     --------------------------------------------------------------- */
+  .atr-pdp {
+    background-color: var(--atr-paper);
+  }
+
+  /* 1. Kopf ------------------------------------------------------- */
+  .atr-pdp__head {
+    display: grid;
+    gap: 40px;
+    padding-block: 32px 64px;
+  }
+
+  .atr-pdp__gallery {
+    display: grid;
+    gap: 12px;
+  }
+
+  .atr-pdp__shot {
+    margin: 0;
+    background-color: var(--atr-sand);
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+
+  .atr-scope .atr-pdp__shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .atr-pdp__buy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /*
+   * Der Produktname ist der einzige Titel der Seite ohne Versalien und ohne
+   * Laufweite — er soll wie ein geschriebenes Wort wirken, nicht wie ein Label.
+   */
+  .atr-pdp__name {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    text-transform: none;
+  }
+
+  .atr-pdp__tagline {
+    margin: 16px 0 0;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--atr-muted);
+    max-width: 34ch;
+  }
+
+  .atr-pdp__price {
+    margin: 32px 0 0;
+    font-size: 20px;
+    font-weight: 300;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .atr-pdp__spec {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: var(--atr-muted);
+  }
+
+  .atr-pdp__form {
+    /* In der Flex-Spalte sonst nur so breit wie die Button-Beschriftung. */
+    align-self: stretch;
+    margin: 0;
+    max-width: 340px;
+  }
+
+  .atr-pdp__varlabel {
+    display: block;
+    margin: 32px 0 8px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+  }
+
+  .atr-scope .atr-pdp__variants {
+    width: 100%;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid var(--atr-ink);
+    border-radius: 0;
+    background: transparent;
+    font-family: var(--atr-font);
+    font-size: 14px;
+    color: var(--atr-ink);
+  }
+
+  .atr-pdp__add {
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .atr-pdp__add[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .atr-pdp__family {
+    margin: 20px 0 0;
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  /* 2. Komposition ------------------------------------------------ */
+  .atr-pdp__composition {
+    background-color: var(--atr-sand);
+    padding-block: 64px;
+  }
+
+  .atr-pdp__prose {
+    max-width: 62ch;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  .atr-pdp__prose p {
+    margin: 0;
+  }
+
+  .atr-pdp__notes {
+    margin-top: 48px;
+    max-width: 560px;
+  }
+
+  /*
+   * Jede Note sitzt auf einer Haarlinie. Der eingefaerbte Anteil dieser Linie
+   * waechst von Kopf (22%) ueber Herz (58%) zu Basis (100%) — die Linie zeigt,
+   * wie lange die Note auf der Haut bleibt. Einziges Bildmittel der Seite.
+   */
+  .atr-pdp__note {
+    position: relative;
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 16px;
+    align-items: baseline;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--atr-stone);
+  }
+
+  .atr-pdp__note::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: var(--atr-persist, 0%);
+    background-color: var(--atr-ink);
+  }
+
+  .atr-pdp__phase {
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  .atr-pdp__value {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .atr-pdp__legend {
+    margin: 16px 0 0;
+    max-width: 560px;
+    font-size: 12px;
+    font-style: italic;
+    color: var(--atr-muted);
+  }
+
+  /* 3. Details ---------------------------------------------------- */
+  .atr-pdp__details-inner {
+    padding-block: 56px;
+    display: grid;
+    gap: 20px;
+  }
+
+  .atr-pdp__detail {
+    margin: 0;
+    max-width: 60ch;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--atr-muted);
+  }
+
+  /* 4. Geschwister ------------------------------------------------ */
+  .atr-pdp__siblings {
+    border-top: 1px solid var(--atr-mist);
+  }
+
+  .atr-pdp__siblings-inner {
+    padding-block: 48px 72px;
+  }
+
+  .atr-pdp__siblings-lead {
+    margin: 0 0 24px;
+    font-size: 13px;
+    color: var(--atr-muted);
+  }
+
+  .atr-pdp__siblings-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0;
+    max-width: 560px;
+  }
+
+  .atr-pdp__sibling {
+    display: grid;
+    gap: 4px;
+    padding-block: 18px;
+    border-top: 1px solid var(--atr-mist);
+    text-decoration: none;
+    color: var(--atr-ink);
+    transition: padding-left 0.25s ease;
+  }
+
+  .atr-pdp__siblings-list li:last-child .atr-pdp__sibling {
+    border-bottom: 1px solid var(--atr-mist);
+  }
+
+  .atr-pdp__sibling:hover {
+    padding-left: 12px;
+  }
+
+  .atr-pdp__sibling-name {
+    font-size: 18px;
+    font-weight: 300;
+  }
+
+  .atr-pdp__sibling-tag {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--atr-muted);
+  }
+
+  .atr-pdp__sibling:focus-visible {
+    outline: 1px solid var(--atr-ink);
+    outline-offset: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atr-pdp__sibling {
+      transition: none;
+    }
+    .atr-pdp__sibling:hover {
+      padding-left: 0;
+    }
+  }
+
+  /* Desktop ------------------------------------------------------- */
+  @media screen and (min-width: 900px) {
+    .atr-pdp__head {
+      grid-template-columns: 1.15fr 1fr;
+      gap: 64px;
+      align-items: start;
+      padding-block: 48px 96px;
+    }
+
+    .atr-pdp__buy {
+      position: sticky;
+      top: 96px;
+      padding-top: 24px;
+    }
+
+    .atr-pdp__name {
+      font-size: 46px;
+    }
+
+    .atr-pdp__composition {
+      padding-block: 96px;
+    }
+
+    .atr-pdp__note {
+      grid-template-columns: 96px 1fr;
+    }
+
+    /* Prosa links, Struktur rechts — die Sektion fuellt die Seitenbreite. */
+    .atr-pdp__composition-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 460px) minmax(0, 560px);
+      gap: 80px;
+      align-items: start;
+    }
+
+    .atr-pdp__notes {
+      margin-top: 0;
+    }
+  }
+</style>
+
+{%- if product.variants.size > 1 -%}
+  <script>
+    (function () {
+      var sel = document.querySelector('[data-atr-variants]');
+      var price = document.querySelector('[data-atr-price]');
+      var add = document.querySelector('[data-atr-add]');
+      if (!sel || !price || !add) return;
+
+      sel.addEventListener('change', function () {
+        var opt = sel.options[sel.selectedIndex];
+        if (opt.dataset.price) price.textContent = opt.dataset.price;
+        add.disabled = opt.disabled;
+        add.textContent = opt.disabled ? 'Ausverkauft' : 'In den Warenkorb legen';
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "ATR Produkt",
+  "tag": "section",
+  "class": "atr-section-product",
+  "settings": [
+    {
+      "type": "text",
+      "id": "spec_fallback",
+      "label": "Grössenangabe, falls die Variante keine hat",
+      "default": "50 ml"
+    },
+    {
+      "type": "text",
+      "id": "spec_suffix",
+      "label": "Zusatz hinter der Grösse",
+      "default": "Eau de Parfum"
+    },
+    {
+      "type": "text",
+      "id": "legend",
+      "label": "Bildunterschrift unter den Duftnoten",
+      "info": "Erklärt die Linien — ohne sie wirken sie dekorativ.",
+      "default": "Die Linie zeigt, wie lange eine Note auf der Haut bleibt. Von flüchtig nach bleibend."
+    },
+    {
+      "type": "textarea",
+      "id": "note_1",
+      "label": "Hinweis 1",
+      "default": "50 ml Eau de Parfum, von Hand abgefüllt in Duisburg."
+    },
+    {
+      "type": "textarea",
+      "id": "note_2",
+      "label": "Hinweis 2",
+      "default": "Die vollständige Liste der Inhaltsstoffe findest du über den QR-Code am Flakon."
+    },
+    {
+      "type": "textarea",
+      "id": "note_3",
+      "label": "Hinweis 3",
+      "default": "Bei empfindlicher Haut vor der ersten Anwendung in der Armbeuge testen und einen Tag abwarten."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection für „Die anderen Düfte“",
+      "info": "Ohne Zuweisung entfällt der Abschnitt."
+    },
+    {
+      "type": "text",
+      "id": "siblings_lead",
+      "label": "Zeile über den anderen Düften",
+      "default": "Es gibt drei. Das sind die beiden anderen."
+    }
+  ],
+  "presets": [{ "name": "ATR Produkt" }]
+}
+{% endschema %}

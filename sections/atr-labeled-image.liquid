@@ -1,0 +1,208 @@
+{%- comment -%}
+  Wiederverwendbare Basis: vertikales Randlabel, grosses Bild, daneben Text mit
+  Textlink. Pendant zu components/sections/LabeledImageSection.tsx im
+  Next.js-Referenzprojekt. Mehrfach pro Seite einsetzbar (Hochzeit, Workshops …).
+{%- endcomment -%}
+
+<div class="atr-scope atr-li">
+  <div class="atr-container">
+    <div class="atr-li__layout">
+      <div class="atr-li__label">
+        <span class="atr-label-vertical">{{ section.settings.label }}</span>
+      </div>
+
+      <div class="atr-li__body">
+        <div class="atr-li__grid atr-li__grid--{{ section.settings.image_position }}">
+          <div class="atr-li__media">
+            {%- if section.settings.image != blank -%}
+              {{
+                section.settings.image
+                | image_url: width: 1600
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 750px) 60vw, 100vw',
+                  widths: '400,600,900,1200,1600',
+                  alt: section.settings.image.alt | default: section.settings.label
+              }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: '' }}
+            {%- endif -%}
+          </div>
+
+          <div class="atr-li__text">
+            {%- if section.settings.eyebrow != blank -%}
+              <p class="atr-li__eyebrow">{{ section.settings.eyebrow }}</p>
+            {%- endif -%}
+
+            {%- if section.settings.text != blank -%}
+              <div class="atr-li__copy">{{ section.settings.text }}</div>
+            {%- endif -%}
+
+            {%- if section.settings.note != blank -%}
+              <p class="atr-li__note">{{ section.settings.note }}</p>
+            {%- endif -%}
+
+            {%- if section.settings.link_label != blank -%}
+              <a href="{{ section.settings.link_url | default: '#' }}" class="atr-textlink atr-li__link">
+                {{ section.settings.link_label }}
+              </a>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-li {
+    padding-block: 48px;
+  }
+
+  .atr-li__layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .atr-li__label {
+    flex: 0 0 auto;
+    padding-top: 4px;
+  }
+
+  .atr-li__body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Mobil steht das Bild immer oben, erst ab 750px daneben. */
+  .atr-li__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .atr-li__media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background-color: var(--atr-sand);
+    overflow: hidden;
+  }
+
+  .atr-scope .atr-li__media img,
+  .atr-scope .atr-li__media svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .atr-li__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .atr-li__eyebrow {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-wide2);
+    color: var(--atr-muted);
+  }
+
+  .atr-li__copy {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .atr-li__copy p {
+    margin: 0;
+  }
+
+  .atr-li__note {
+    margin: 0;
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  .atr-li__link {
+    margin-top: 8px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-li {
+      padding-block: 72px;
+    }
+
+    .atr-li__layout {
+      gap: 32px;
+    }
+
+    .atr-li__grid {
+      flex-direction: row;
+      align-items: center;
+      gap: 48px;
+    }
+
+    .atr-li__grid--right {
+      flex-direction: row-reverse;
+    }
+
+    .atr-li__media {
+      width: 60%;
+      flex: 0 0 60%;
+      aspect-ratio: 4 / 3;
+    }
+
+    .atr-li__text {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Bild mit Label",
+  "tag": "section",
+  "class": "atr-section-labeled-image",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Vertikales Randlabel",
+      "default": "Hochzeit"
+    },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (optional)" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Ein Duft, der euren Tag festhält.</p>"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Kleine Zusatzzeile",
+      "info": "Zum Beispiel eine Preisangabe."
+    },
+    { "type": "text", "id": "link_label", "label": "Textlink", "default": "Mehr erfahren" },
+    { "type": "url", "id": "link_url", "label": "Textlink-Ziel" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Bildposition ab Desktop",
+      "options": [
+        { "value": "left", "label": "Links" },
+        { "value": "right", "label": "Rechts" }
+      ],
+      "default": "right"
+    }
+  ],
+  "presets": [{ "name": "ATR Bild mit Label" }]
+}
+{% endschema %}

@@ -1,0 +1,161 @@
+<div class="atr-scope atr-section">
+  <div class="atr-container">
+    <div class="atr-section-head">
+      <div class="atr-stack atr-stack--xs">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="atr-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="atr-h-display atr-h2">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subline != blank -%}
+          <p class="atr-subline atr-measure--wide">{{ section.settings.subline }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.link_label != blank -%}
+        <a href="{{ section.settings.link_url | default: '#' }}" class="atr-textlink">
+          {{ section.settings.link_label }}
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.image != blank -%}
+      <div class="atr-media atr-media--wide atr-world__map">
+        {{
+          section.settings.image
+          | image_url: width: 2000
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 990px) 90vw, 100vw',
+            widths: '600,900,1400,2000',
+            alt: section.settings.image.alt | default: section.settings.heading
+        }}
+      </div>
+    {%- endif -%}
+
+    <div class="atr-grid atr-grid--4 atr-world__origins">
+      {%- for block in section.blocks -%}
+        <div class="atr-world__origin" {{ block.shopify_attributes }}>
+          <p class="atr-meta">{{ block.settings.region }}</p>
+          <h3 class="atr-h-display atr-h3">{{ block.settings.material }}</h3>
+          <p class="atr-body atr-body--muted">{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-world__map {
+    background-color: var(--atr-sand);
+    margin-bottom: 48px;
+  }
+
+  .atr-world__origins {
+    border-top: 1px solid var(--atr-mist);
+    padding-top: 32px;
+  }
+
+  .atr-world__origin {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .atr-world__origin .atr-body {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .atr-world__origins {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+
+    .atr-world__origin {
+      border-bottom: 1px solid var(--atr-mist);
+      padding-bottom: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR World of Scent",
+  "tag": "section",
+  "class": "atr-section-world",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "World of Scent" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Herkunft der Rohstoffe"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Kursive Subline",
+      "default": "Von Grasse bis Kerala — die Karte der Felder, Destillerien und Hände hinter jeder Tinte."
+    },
+    { "type": "image_picker", "id": "image", "label": "Karte / Bild" },
+    { "type": "text", "id": "link_label", "label": "Textlink", "default": "Lieferkette ansehen" },
+    { "type": "url", "id": "link_url", "label": "Textlink-Ziel" }
+  ],
+  "blocks": [
+    {
+      "type": "origin",
+      "name": "Herkunft",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "region", "label": "Region", "default": "Grasse, Frankreich" },
+        { "type": "text", "id": "material", "label": "Rohstoff", "default": "Iris" },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Drei Jahre Reifung der Rhizome, bevor überhaupt destilliert wird."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR World of Scent",
+      "blocks": [
+        {
+          "type": "origin",
+          "settings": {
+            "region": "Grasse, Frankreich",
+            "material": "Iris",
+            "text": "Drei Jahre Reifung der Rhizome, bevor überhaupt destilliert wird."
+          }
+        },
+        {
+          "type": "origin",
+          "settings": {
+            "region": "Kerala, Indien",
+            "material": "Vetiver",
+            "text": "Wurzeln aus Handernte, in kleinen Kupferblasen destilliert."
+          }
+        },
+        {
+          "type": "origin",
+          "settings": {
+            "region": "Kalabrien, Italien",
+            "material": "Bergamotte",
+            "text": "Kaltgepresst innerhalb von zwölf Stunden nach der Ernte."
+          }
+        },
+        {
+          "type": "origin",
+          "settings": {
+            "region": "Mysore, Indien",
+            "material": "Sandelholz",
+            "text": "Ausschließlich aus zertifizierten Plantagen, mit Herkunftsnachweis."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

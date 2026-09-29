@@ -1,0 +1,353 @@
+{%- liquid
+  assign coll = collections[section.settings.collection]
+  assign items = coll.products
+  assign has_products = false
+  if items.size > 0
+    assign has_products = true
+  endif
+-%}
+
+<div class="atr-scope atr-sig">
+  <div class="atr-container">
+    <div class="atr-sig__layout">
+      <div class="atr-sig__label">
+        <span class="atr-label-vertical">{{ section.settings.label }}</span>
+      </div>
+
+      <div class="atr-sig__body">
+        <div class="atr-sig__rail" data-atr-rail>
+          {%- if has_products -%}
+            {%- for product in items limit: section.settings.limit -%}
+              <div class="atr-sig__slide">
+                {% render 'atr-signature-card', product: product, eyebrow: section.settings.eyebrow %}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            {%- comment -%}
+              Solange die Collection fehlt oder leer ist, zeigen wir Platzhalter
+              statt gar nichts — sonst wirkt die Sektion auf dem Shop kaputt.
+            {%- endcomment -%}
+            {%- for i in (1..4) -%}
+              <div class="atr-sig__slide">
+                <article class="atr-sig__card">
+                  <p class="atr-sig__eyebrow">{{ section.settings.eyebrow }}</p>
+                  <h3 class="atr-sig__title">Duft {{ i }}</h3>
+                  <div class="atr-sig__media"></div>
+                  <div class="atr-sig__info">
+                    <p class="atr-sig__family">Duftfamilie</p>
+                    <p class="atr-sig__meta">Eau de Parfum · 50 ml</p>
+                    <p class="atr-sig__price">{{ 4900 | money }}</p>
+                  </div>
+                  <span class="atr-btn atr-btn--outline atr-sig__cta">In den Warenkorb</span>
+                </article>
+              </div>
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+
+        <div class="atr-sig__dots" data-atr-dots></div>
+      </div>
+    </div>
+
+    {%- unless has_products -%}
+      <p class="atr-sig__hint">
+        Platzhalter — im Theme-Editor eine Collection mit Produkten zuweisen.
+      </p>
+    {%- endunless -%}
+  </div>
+</div>
+
+<style>
+  .atr-sig {
+    padding-block: 48px;
+  }
+
+  .atr-sig__layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .atr-sig__label {
+    flex: 0 0 auto;
+    padding-top: 4px;
+  }
+
+  .atr-sig__body {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Mobile zuerst: eine Karte 72vw breit, die naechste bleibt angeschnitten. */
+  .atr-sig__rail {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .atr-sig__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .atr-sig__slide {
+    flex: 0 0 auto;
+    width: 72vw;
+    scroll-snap-align: start;
+  }
+
+  .atr-sig__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /*
+   * Muss ueber .atr-sig__media liegen: positionierte Elemente ohne z-index
+   * werden nach solchen mit z-index 0 gezeichnet, das Bild verdeckte den Link
+   * sonst und schluckte den Klick. Herz und Warenkorb-Formular stehen auf 2
+   * und bleiben damit weiterhin bedienbar.
+   */
+  .atr-sig__cardlink {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .atr-sig__eyebrow {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+  }
+
+  .atr-sig__title {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-display);
+  }
+
+  .atr-sig__media {
+    position: relative;
+    margin-top: 16px;
+    aspect-ratio: 4 / 5;
+    background-color: var(--atr-sand);
+    overflow: hidden;
+  }
+
+  .atr-sig__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .atr-sig__heart {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    background: none;
+    border: 0;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--atr-ink);
+    line-height: 0;
+  }
+
+  .atr-sig__heart[aria-pressed='true'] svg path {
+    fill: currentColor;
+  }
+
+  .atr-sig__info {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .atr-sig__family {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+  }
+
+  .atr-sig__meta {
+    margin: 0;
+    font-size: 13px;
+    color: var(--atr-muted);
+  }
+
+  .atr-sig__price {
+    margin: 4px 0 0;
+    font-size: 14px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .atr-sig__compare {
+    font-size: 13px;
+    color: var(--atr-muted);
+    text-decoration: line-through;
+  }
+
+  .atr-sig__form {
+    position: relative;
+    z-index: 2;
+    margin-top: 20px;
+  }
+
+  .atr-sig__cta {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .atr-sig__form .atr-sig__cta {
+    margin-top: 0;
+  }
+
+  .atr-sig__dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  /* .atr-scope * setzt border-radius: 0 — hier bewusst ueberstimmt. */
+  .atr-scope .atr-sig__dot {
+    width: 6px;
+    height: 6px;
+    border: 0;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--atr-mist);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .atr-scope .atr-sig__dot[aria-current='true'] {
+    background: var(--atr-ink);
+  }
+
+  .atr-sig__hint {
+    margin: 24px 0 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+    text-align: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-sig {
+      padding-block: 72px;
+    }
+
+    .atr-sig__layout {
+      gap: 32px;
+    }
+
+    .atr-sig__rail {
+      gap: 32px;
+    }
+
+    /* Vier Karten nebeneinander, drei Luecken a 32px. */
+    .atr-sig__slide {
+      width: calc((100% - 96px) / 4);
+    }
+
+    .atr-sig__dots {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var rail = document.querySelector('[data-atr-rail]');
+    var dots = document.querySelector('[data-atr-dots]');
+    if (!rail || !dots) return;
+
+    var slides = Array.prototype.slice.call(rail.children);
+    if (slides.length < 2) return;
+
+    slides.forEach(function (slide, index) {
+      var dot = document.createElement('button');
+      dot.type = 'button';
+      dot.className = 'atr-sig__dot';
+      dot.setAttribute('aria-label', 'Zu Karte ' + (index + 1));
+      dot.addEventListener('click', function () {
+        rail.scrollTo({ left: slide.offsetLeft, behavior: 'smooth' });
+      });
+      dots.appendChild(dot);
+    });
+
+    var buttons = Array.prototype.slice.call(dots.children);
+
+    function sync() {
+      var nearest = 0;
+      var min = Infinity;
+      slides.forEach(function (slide, index) {
+        var distance = Math.abs(slide.offsetLeft - rail.scrollLeft);
+        if (distance < min) {
+          min = distance;
+          nearest = index;
+        }
+      });
+      buttons.forEach(function (dot, index) {
+        dot.setAttribute('aria-current', String(index === nearest));
+      });
+    }
+
+    sync();
+    rail.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "ATR Signature Slider",
+  "tag": "section",
+  "class": "atr-section-signature",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Vertikales Randlabel",
+      "default": "Signature"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Zeile über dem Produkttitel",
+      "default": "Signature Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Ohne Zuweisung zeigt die Sektion Platzhalter-Karten."
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Anzahl Karten",
+      "default": 4
+    }
+  ],
+  "presets": [{ "name": "ATR Signature Slider" }]
+}
+{% endschema %}

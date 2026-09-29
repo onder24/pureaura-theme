@@ -1,0 +1,357 @@
+<style>
+/* ── WORKSHOP STEP ── */
+.s-ws-wrap { padding-bottom: 120px; }
+.s-ws-header { margin-bottom: 24px; }
+
+.s-ws-eyebrow {
+  font-family: var(--f-mono); font-size: 10px; letter-spacing: 3px;
+  color: var(--g-400); text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 8px;
+}
+.s-ws-eyebrow::before {
+  content: ''; display: block; width: 16px; height: 1px;
+  background: var(--g-400); flex-shrink: 0;
+}
+.s-ws-title {
+  font-family: var(--f-display); font-size: 34px; font-weight: 300;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--text-primary); line-height: 1;
+}
+.s-ws-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, var(--border-mid), transparent); margin-top: 12px;
+}
+
+/* HERO CARD */
+.s-ws-hero {
+  background: var(--bg-glass); backdrop-filter: blur(16px);
+  border: 1px solid var(--border-dim); border-left: 2px solid var(--g-400);
+  border-radius: var(--r-md); padding: 22px 20px; margin-bottom: 20px;
+  position: relative; overflow: hidden;
+}
+.s-ws-hero::after {
+  content: ''; position: absolute; top: -40%; right: -20%;
+  width: 200px; height: 200px;
+  background: radial-gradient(ellipse, rgba(74,158,116,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.s-ws-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--g-400);
+  background: rgba(74,158,116,0.08); border: 1px solid rgba(74,158,116,0.2);
+  border-radius: var(--r-full); padding: 4px 12px; margin-bottom: 14px;
+}
+.s-ws-badge::before {
+  content: ''; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--g-400); box-shadow: 0 0 6px var(--g-400);
+  animation: ledPulse 2.5s infinite ease-out;
+}
+.s-ws-hero-title {
+  font-family: var(--f-display); font-size: 26px; font-weight: 400;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--text-primary); margin-bottom: 6px;
+}
+.s-ws-hero-sub {
+  font-family: var(--f-body); font-size: 13px; font-weight: 300;
+  color: var(--text-secondary); line-height: 1.6; margin-bottom: 18px;
+}
+.s-ws-facts { display: flex; gap: 8px; flex-wrap: wrap; }
+.s-ws-fact {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--f-body); font-size: 11px; color: var(--text-muted);
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border-dim);
+  border-radius: var(--r-full); padding: 5px 12px;
+}
+.s-ws-fact-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--g-500); flex-shrink: 0; }
+
+/* SECTION LABEL */
+.s-ws-section-label {
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
+}
+
+/* COUNT SLOTS */
+.s-ws-slots { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+
+.s-ws-slot {
+  background: var(--bg-glass); border: 1px solid var(--border-dim);
+  border-radius: var(--r-md); padding: 16px 20px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.3s var(--ease); position: relative; overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.s-ws-slot::before {
+  content: ''; position: absolute; left: 0; top: 15%; bottom: 15%; width: 2px;
+  background: linear-gradient(to bottom, transparent, var(--g-400), transparent);
+  opacity: 0; transition: opacity 0.3s; border-radius: 2px;
+}
+.s-ws-slot:hover { border-color: var(--border-mid); background: var(--bg-glass-hi); }
+.s-ws-slot.active {
+  border-color: var(--border-accent);
+  background: linear-gradient(135deg, rgba(19,51,36,0.7), rgba(12,22,16,0.8));
+  box-shadow: var(--shadow-glow);
+}
+.s-ws-slot.active::before { opacity: 1; }
+.s-ws-slot-l { display: flex; flex-direction: column; gap: 3px; }
+.s-ws-slot-num { font-family: var(--f-mono); font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+.s-ws-slot.active .s-ws-slot-num { color: var(--g-400); }
+.s-ws-slot-name { font-family: var(--f-body); font-size: 14px; font-weight: 400; letter-spacing: 0.5px; color: var(--s-200); }
+.s-ws-slot.active .s-ws-slot-name { color: var(--text-primary); }
+.s-ws-slot-r { display: flex; align-items: center; gap: 14px; }
+.s-ws-slot-price { font-family: var(--f-display); font-size: 22px; font-weight: 400; color: var(--s-200); transition: color 0.3s; }
+.s-ws-slot.active .s-ws-slot-price { color: var(--gold); }
+.s-ws-slot-radio {
+  width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--text-muted); transition: all 0.3s; flex-shrink: 0;
+}
+.s-ws-slot.active .s-ws-slot-radio { background: var(--g-400); border-color: var(--g-400); box-shadow: 0 0 10px var(--g-400); }
+
+/* DATE PICKER */
+.s-ws-dates-wrap {
+  animation: stepEnter 0.4s var(--ease) both;
+}
+.s-ws-dates-title {
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px;
+}
+
+.s-ws-person-block { margin-bottom: 20px; }
+.s-ws-person-label {
+  font-family: var(--f-mono); font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--g-500); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.s-ws-person-label::before {
+  content: ''; width: 10px; height: 1px; background: var(--g-500);
+}
+
+.s-ws-date-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+
+.s-ws-date-btn {
+  background: var(--bg-glass); border: 1px solid var(--border-dim);
+  border-radius: var(--r-sm); padding: 12px 10px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  transition: all 0.25s var(--ease); -webkit-tap-highlight-color: transparent;
+  position: relative; overflow: hidden;
+}
+.s-ws-date-btn:hover { border-color: var(--border-mid); background: var(--bg-glass-hi); }
+.s-ws-date-btn.active {
+  border-color: var(--border-accent);
+  background: linear-gradient(135deg, rgba(19,51,36,0.7), rgba(12,22,16,0.8));
+  box-shadow: var(--shadow-glow);
+}
+.s-ws-date-day {
+  font-family: var(--f-mono); font-size: 8px; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--text-muted);
+}
+.s-ws-date-btn.active .s-ws-date-day { color: var(--g-400); }
+.s-ws-date-date {
+  font-family: var(--f-display); font-size: 18px; font-weight: 400;
+  color: var(--s-200); line-height: 1;
+}
+.s-ws-date-btn.active .s-ws-date-date { color: var(--text-primary); }
+.s-ws-date-time {
+  font-family: var(--f-body); font-size: 11px; font-weight: 500;
+  color: var(--g-500); letter-spacing: 0.5px;
+}
+.s-ws-date-btn.active .s-ws-date-time { color: var(--g-300); }
+
+/* FOOTER */
+.s-ws-footer {
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 2000;
+  display: flex; flex-direction: column; align-items: center;
+  background: linear-gradient(to top, var(--bg) 0%, rgba(4,8,6,0.95) 55%, transparent 100%);
+  padding: 12px 16px 24px; pointer-events: none; gap: 8px;
+}
+.s-ws-footer > * { pointer-events: auto; width: 100%; max-width: var(--max-w); }
+</style>
+
+<div class="s-ws-wrap">
+  <!-- HEADER -->
+  <div class="s-ws-header lab-header">
+    <div class="s-ws-eyebrow">Step 04</div>
+    <h2 class="s-ws-title">Workshop</h2>
+    <div class="s-ws-divider"></div>
+  </div>
+
+  <!-- HERO CARD -->
+  <div class="s-ws-hero">
+    <div class="s-ws-badge">Live · Online · Zoom</div>
+    <div class="s-ws-hero-title">Parfümeur-Session</div>
+    <p class="s-ws-hero-sub">90 Minuten mit einem professionellen Parfümeur — persönlich, interaktiv, auf eure Komposition zugeschnitten.</p>
+    <div class="s-ws-facts">
+      <span class="s-ws-fact"><span class="s-ws-fact-dot"></span>90 Minuten</span>
+      <span class="s-ws-fact"><span class="s-ws-fact-dot"></span>Online via Zoom</span>
+      <span class="s-ws-fact"><span class="s-ws-fact-dot"></span>29 € p.P.</span>
+      <span class="s-ws-fact"><span class="s-ws-fact-dot"></span>Jeden Sonntag</span>
+    </div>
+  </div>
+
+  <!-- COUNT SELECTION -->
+  <p class="s-ws-section-label" id="ws-slots-label">Anzahl Sessions wählen</p>
+  <div class="s-ws-slots" id="ws-slots"></div>
+
+  <!-- DATE SELECTION (shown after count > 0) -->
+  <div id="ws-dates-wrap" style="display:none;"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="s-ws-footer">
+  <button class="neo-btn" id="ws-confirm-btn" onclick="wsConfirm()">Weiter</button>
+</div>
+
+<script>
+(function() {
+
+  // Generate upcoming Sundays (next 8)
+  function getUpcomingSundays(n) {
+    var sundays = [];
+    var d = new Date();
+    // Start from tomorrow at least
+    d.setDate(d.getDate() + 1);
+    while (sundays.length < n) {
+      if (d.getDay() === 0) { // 0 = Sunday
+        sundays.push(new Date(d));
+      }
+      d.setDate(d.getDate() + 1);
+    }
+    return sundays;
+  }
+
+  function formatDate(d) {
+    var days = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+    var months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    return {
+      day: days[d.getDay()],
+      date: d.getDate() + '. ' + months[d.getMonth()],
+      iso: d.toISOString().slice(0,10)
+    };
+  }
+
+  function renderDates(wrap, count) {
+    wrap.innerHTML = '';
+    if (count === 0) return;
+
+    var sundays = getUpcomingSundays(6);
+    var state   = window.alchemistState;
+    if (!state.workshopDates) state.workshopDates = [];
+
+    for (var p = 0; p < count; p++) {
+      var block = document.createElement('div');
+      block.className = 's-ws-person-block';
+
+      var plabel = document.createElement('div');
+      plabel.className = 's-ws-person-label';
+      plabel.textContent = count === 1 ? 'Datum & Uhrzeit wählen' : 'Person ' + (p + 1) + ' — Datum & Uhrzeit';
+      block.appendChild(plabel);
+
+      var grid = document.createElement('div');
+      grid.className = 's-ws-date-grid';
+
+      var personIdx = p;
+      var savedSlot = state.workshopDates[personIdx] || null;
+
+      sundays.forEach(function(sun) {
+        var fmt = formatDate(sun);
+        [
+          { time: '14:00 Uhr', key: fmt.iso + '_14' },
+          { time: '19:00 Uhr', key: fmt.iso + '_19' }
+        ].forEach(function(slot) {
+          var btn = document.createElement('div');
+          btn.className = 's-ws-date-btn' + (savedSlot === slot.key ? ' active' : '');
+          btn.dataset.key = slot.key;
+          btn.innerHTML =
+            '<span class="s-ws-date-day">' + fmt.day + '</span>' +
+            '<span class="s-ws-date-date">' + fmt.date + '</span>' +
+            '<span class="s-ws-date-time">' + slot.time + '</span>';
+          btn.addEventListener('click', function() {
+            // deselect others in this block
+            grid.querySelectorAll('.s-ws-date-btn').forEach(function(b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            if (!state.workshopDates) state.workshopDates = [];
+            state.workshopDates[personIdx] = slot.key;
+          });
+          grid.appendChild(btn);
+        });
+      });
+
+      block.appendChild(grid);
+      wrap.appendChild(block);
+    }
+  }
+
+  window.initWorkshopStep = function() {
+    var state  = window.alchemistState;
+    var max    = state.totalSets;
+    var slots  = document.getElementById('ws-slots');
+    var label  = document.getElementById('ws-slots-label');
+    var datesWrap = document.getElementById('ws-dates-wrap');
+    if (!slots) return;
+
+    state.workshopDates = [];
+
+    var options = [
+      { count: 0, name: 'Kein Workshop' },
+      { count: 1, name: '1 Workshop-Session' },
+      { count: 2, name: '2 Workshop-Sessions' }
+    ];
+
+    label.textContent = max === 1 ? 'Workshop hinzufügen (optional)' : 'Sessions wählen — max. ' + max;
+
+    slots.innerHTML = '';
+    options.forEach(function(opt) {
+      if (opt.count > max) return;
+      var el = document.createElement('div');
+      var isActive = state.workshopCount === opt.count;
+      el.className = 's-ws-slot' + (isActive ? ' active' : '');
+      el.innerHTML =
+        '<div class="s-ws-slot-l">' +
+          '<span class="s-ws-slot-num">' + (opt.count === 0 ? 'OPTIONAL' : opt.count + '×') + '</span>' +
+          '<span class="s-ws-slot-name">' + opt.name + '</span>' +
+        '</div>' +
+        '<div class="s-ws-slot-r">' +
+          '<span class="s-ws-slot-price">' + (opt.count === 0 ? '—' : (opt.count * 29) + ' €') + '</span>' +
+          '<span class="s-ws-slot-radio"></span>' +
+        '</div>';
+      el.addEventListener('click', function() {
+        slots.querySelectorAll('.s-ws-slot').forEach(function(s) { s.classList.remove('active'); });
+        el.classList.add('active');
+        state.workshopCount = opt.count;
+        state.workshopDates = [];
+        if (opt.count > 0) {
+          datesWrap.style.display = 'block';
+          renderDates(datesWrap, opt.count);
+        } else {
+          datesWrap.style.display = 'none';
+          datesWrap.innerHTML = '';
+        }
+      });
+      slots.appendChild(el);
+
+      // render dates if already selected > 0
+      if (isActive && opt.count > 0) {
+        datesWrap.style.display = 'block';
+        renderDates(datesWrap, opt.count);
+      }
+    });
+  };
+
+  window.wsConfirm = function() {
+    var state = window.alchemistState;
+    if (state.workshopCount == null) state.workshopCount = 0;
+
+    // Validate: if workshop booked, all dates must be selected
+    if (state.workshopCount > 0) {
+      var dates = state.workshopDates || [];
+      for (var i = 0; i < state.workshopCount; i++) {
+        if (!dates[i]) {
+          showToast('Bitte ' + (state.workshopCount > 1 ? 'alle Termine' : 'einen Termin') + ' wählen', 'error');
+          return;
+        }
+      }
+    }
+    if (typeof navTo === 'function') navTo(5);
+  };
+
+})();
+</script>

@@ -1,0 +1,228 @@
+{% comment %}
+  ATRAMENTI INSTAGRAM  ·  Forest & Amber
+
+  Changed:
+  - The fallback grid was ten empty tiles, each containing a hand-drawn
+    outline SVG and nothing else. Section 4.7 requires a grid to have
+    exactly as many cells as there is content for, and 4.8 forbids
+    hand-rolled decorative SVGs. It is now six real scent renders from
+    assets/ with captions below the image, never overlaid on it.
+  - Removed the "Installiere die kostenlose Instafeed App" notice. That is
+    a note for the shop owner and it was rendering to customers.
+  - Tiles link to the configurator rather than claiming to be Instagram
+    posts. The follow action lives in the header where it belongs.
+  - onclick="window.open(...)" replaced with real anchors, so the tiles are
+    keyboard reachable and middle-clickable.
+  - "Folg uns auf" corrected to "Folge uns auf".
+  - Eyebrow dropped: the page budget of two is spent elsewhere.
+
+  TO CONNECT LIVE POSTS (shop owner, not visible to customers):
+  install the free "Instafeed" app from the Shopify App Store and connect
+  @atramentiofficial. The app injects into #instafeed below, and the script
+  at the bottom then hides this fallback grid automatically.
+{% endcomment %}
+
+{%- liquid
+  assign files = 'oil-amber.png,oil-oud.png,oil-vanille.png,oil-zedernholz.png,oil-meersalz.png,oil-patchouli.png' | split: ','
+  assign names = 'Amber,Oud,Vanille,Zedernholz,Meersalz,Patchouli' | split: ','
+-%}
+
+<section class="atm atm-section atm-ig">
+  <div class="atm-wrap">
+    <header class="atm-ig-head atm-reveal">
+      <h2 class="atm-display atm-h2">
+        Folge uns auf
+        <strong>@atramentiofficial</strong>
+      </h2>
+
+      <a
+        href="https://www.instagram.com/atramentiofficial"
+        target="_blank"
+        rel="noopener"
+        class="atm-btn atm-btn--ghost atm-ig-follow"
+      >
+        {% render 'atm-icon', name: 'instagram-logo' %}
+        Folgen
+      </a>
+    </header>
+
+    {% comment %} Instafeed app mounts real posts here when connected. {% endcomment %}
+    <div id="instafeed" class="atm-ig-live" hidden></div>
+
+    <ul class="atm-ig-grid" id="atm-ig-fallback">
+      {%- for file in files -%}
+        <li class="atm-ig-cell atm-reveal" data-atm-delay="{{ forloop.index0 | times: 60 }}">
+          <a href="/pages/konfigurator" class="atm-ig-tile">
+            <span class="atm-ig-frame">
+              <img
+                src="{{ file | asset_img_url: '460x' }}"
+                srcset="
+                  {{ file | asset_img_url: '340x' }} 340w,
+                  {{ file | asset_img_url: '460x' }} 460w,
+                  {{ file | asset_img_url: '680x' }} 680w
+                "
+                sizes="(min-width: 1024px) 30vw, 44vw"
+                width="896"
+                height="1200"
+                alt="Essenz {{ names[forloop.index0] }} von Atramenti"
+                loading="lazy"
+                decoding="async"
+              >
+            </span>
+            <span class="atm-ig-caption">{{ names[forloop.index0] }}</span>
+          </a>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .atm-ig {
+    background: var(--atm-bg);
+  }
+
+  .atm-ig-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: clamp(40px, 5vw, 68px);
+  }
+
+  .atm-ig-head h2 {
+    margin: 0;
+    max-width: 26ch;
+  }
+
+  /* The handle is long, so it must not force a mid-word break. */
+  .atm-ig-head strong {
+    display: block;
+    word-break: break-word;
+  }
+
+  .atm-ig-follow {
+    flex-shrink: 0;
+  }
+
+  .atm-ig-follow .atm-icon {
+    font-size: 17px;
+    width: 1em;
+    height: 1em;
+  }
+
+  .atm-ig-live[hidden] {
+    display: none;
+  }
+
+  .atm-ig-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(14px, 2vw, 26px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .atm-ig-tile {
+    display: block;
+    text-decoration: none;
+  }
+
+  .atm-ig-frame {
+    display: block;
+    overflow: hidden;
+    background: var(--atm-bg-2);
+    border: 1px solid var(--atm-line);
+    border-radius: var(--atm-r);
+  }
+
+  .atm-ig-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 896 / 1200;
+    object-fit: cover;
+    transition: transform 0.6s var(--atm-ease);
+  }
+
+  .atm-ig-tile:hover .atm-ig-frame img {
+    transform: scale(1.03);
+  }
+
+  .atm-ig-caption {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--atm-ink-dim);
+    transition: color 0.25s var(--atm-ease);
+  }
+
+  .atm-ig-tile:hover .atm-ig-caption {
+    color: var(--atm-accent);
+  }
+
+  /* Three columns with the middle one dropped, so the grid reads as a
+     composition rather than a uniform contact sheet. */
+  @media (min-width: 1024px) {
+    .atm-ig-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .atm-ig-cell:nth-child(3n + 2) {
+      margin-top: clamp(28px, 4vw, 56px);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .atm-ig-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atm-ig-frame img,
+    .atm-ig-tile:hover .atm-ig-frame img {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  /* Hand over to the Instafeed app if, and only if, it actually injected
+     posts. Checked once on load and once after the app's async insert. */
+  (function () {
+    var live = document.getElementById('instafeed');
+    var fallback = document.getElementById('atm-ig-fallback');
+    if (!live || !fallback) return;
+
+    function swapIfLive() {
+      if (!live.children.length) return false;
+      live.hidden = false;
+      fallback.hidden = true;
+      return true;
+    }
+
+    if (swapIfLive()) return;
+    setTimeout(swapIfLive, 1500);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Atramenti Instagram",
+  "tag": "section",
+  "class": "atramenti-instagram-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Atramenti Instagram"
+    }
+  ]
+}
+{% endschema %}

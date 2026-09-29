@@ -1,0 +1,66 @@
+<section style="padding:0; width:100%;">
+
+  <header class="lab-header">
+    <div class="step-eyebrow">01 / 04</div>
+    <h1 class="title">Circle Setup</h1>
+    <div class="h-line"></div>
+  </header>
+
+  <div id="circle-options" style="padding-bottom: 110px;">
+
+    <button class="neo-option" onclick="selectCircle('1Person', 1, 69, this)">
+      <div class="option-body">
+        <span class="label">Single Alchemist <span class="set-tag">[1 SET]</span></span>
+        <span class="price-val">69 €</span>
+      </div>
+      <div class="details-pane"><p>1 Flakon (100ml) · 9 erlesene Öle · Becherglas · Pipetten · Etikett</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option" onclick="selectCircle('2Personen', 2, 99, this)">
+      <div class="option-body">
+        <span class="label">Date Night <span class="set-tag">[2 SETS]</span></span>
+        <span class="price-val">99 €</span>
+      </div>
+      <div class="details-pane"><p>2 Flakons (100ml) · 18 Öle · 2 Bechergläser · Pipetten · 2 Etiketten</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option" onclick="selectCircle('3Personen', 3, 159, this)">
+      <div class="option-body">
+        <span class="label">Trio Essence <span class="set-tag">[3 SETS]</span></span>
+        <span class="price-val">159 €</span>
+      </div>
+      <div class="details-pane"><p>3 Flakons (100ml) · 27 Öle · 3 Bechergläser · Pipetten · 3 Etiketten</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option" onclick="selectCircle('4Personen', 4, 189, this)">
+      <div class="option-body">
+        <span class="label">Creative Circle <span class="set-tag">[4 SETS]</span></span>
+        <span class="price-val">189 €</span>
+      </div>
+      <div class="details-pane"><p>4 Flakons (100ml) · 36 Öle · 4 Bechergläser · Pipetten · 4 Etiketten</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+  </div>
+
+  <footer class="lab-footer">
+    <button id="to-vibe" class="neo-btn" disabled onclick="navTo(2)">
+      Öle wählen &nbsp;→
+    </button>
+  </footer>
+
+</section>
+
+<script>
+  function selectCircle(val, count, price, el) {
+    document.querySelectorAll('#circle-options .neo-option').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    if (window.alchemistState) window.alchemistState.totalSets = count;
+    window.sessionAlchemists = count;
+    document.getElementById('to-vibe').disabled = false;
+    if (window.showToast) showToast(`${el.querySelector('.label').textContent.trim().split('[')[0].trim()} ausgewählt`, 'success');
+  }
+</script>

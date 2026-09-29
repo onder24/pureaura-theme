@@ -1,0 +1,3 @@
+[environments.production]
+store = "alchemist-9190.myshopify.com"
+theme = "192463765849"

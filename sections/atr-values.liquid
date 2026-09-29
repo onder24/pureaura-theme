@@ -1,0 +1,99 @@
+<div class="atr-scope atr-values">
+  <div class="atr-container">
+    <div class="atr-values__inner">
+      {%- comment -%} Flakon mit Tintentropfen, 1.5px Strich. {%- endcomment -%}
+      <svg width="40" height="48" viewBox="0 0 40 48" fill="none" aria-hidden="true" focusable="false" class="atr-values__icon">
+        <path d="M16 4h8v6h-8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+        <path
+          d="M14 10h12a6 6 0 0 1 6 6v22a6 6 0 0 1-6 6H14a6 6 0 0 1-6-6V16a6 6 0 0 1 6-6Z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        ></path>
+        <path
+          d="M20 21c3.2 3.4 5 5.8 5 8a5 5 0 0 1-10 0c0-2.2 1.8-4.6 5-8Z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linejoin="round"
+        ></path>
+      </svg>
+
+      <h3 class="atr-values__title">{{ section.settings.heading }}</h3>
+
+      {%- if section.settings.text != blank -%}
+        <div class="atr-values__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-values {
+    padding-block: 64px;
+  }
+
+  .atr-values__inner {
+    max-width: 24rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .atr-values__icon {
+    color: var(--atr-ink);
+  }
+
+  .atr-values__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-display);
+  }
+
+  .atr-values__text {
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--atr-muted);
+  }
+
+  .atr-values__text p {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-values {
+      padding-block: 80px;
+    }
+
+    .atr-values__title {
+      font-size: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Values",
+  "tag": "section",
+  "class": "atr-section-values",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Bewusste Parfümerie"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Vegan, tierversuchsfrei, in kleinen Chargen in Deutschland abgefüllt.</p>"
+    }
+  ],
+  "presets": [{ "name": "ATR Values" }]
+}
+{% endschema %}

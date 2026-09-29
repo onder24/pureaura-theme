@@ -1,0 +1,388 @@
+{% comment %}
+  ATRAMENTI FOOTER — Custom Design System
+  Newsletter · Navigation · Rechtliches · Social · Payment
+{% endcomment %}
+
+<style>
+/* ── ATRAMENTI FOOTER ── */
+.atr-footer-wrap {
+  font-family: 'Barlow', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #080e0a;
+  color: #c8d8ce;
+}
+
+/* ── NEWSLETTER STRIP ── */
+.atr-nl {
+  background: linear-gradient(135deg, #0c1410 0%, #101a13 60%, #0d1711 100%);
+  border-top: 1px solid rgba(74,158,116,0.2);
+  border-bottom: 1px solid rgba(74,158,116,0.12);
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.atr-nl::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(74,158,116,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.atr-nl-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: #4a9e74;
+  margin-bottom: 14px; position: relative;
+}
+.atr-nl-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 300; color: #e2ebe6;
+  letter-spacing: 1px; margin-bottom: 10px;
+  position: relative;
+}
+.atr-nl-heading em { font-style: italic; color: #4a9e74; }
+.atr-nl-sub {
+  font-size: 14px; color: #7d9e90;
+  margin-bottom: 32px; position: relative;
+  max-width: 360px; margin-left: auto; margin-right: auto;
+  line-height: 1.6;
+}
+.atr-nl-form {
+  display: flex; gap: 0;
+  max-width: 460px; margin: 0 auto;
+  position: relative;
+}
+.atr-nl-input {
+  flex: 1;
+  background: rgba(12,20,16,0.8);
+  border: 1px solid rgba(168,191,178,0.2);
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  padding: 16px 20px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px; color: #e2ebe6;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.atr-nl-input::placeholder { color: #5a7a6c; }
+.atr-nl-input:focus { border-color: rgba(74,158,116,0.5); }
+.atr-nl-btn {
+  background: #4a9e74;
+  color: #fff; border: none;
+  border-radius: 0 6px 6px 0;
+  padding: 16px 28px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+.atr-nl-btn:hover { background: #5db88a; }
+.atr-nl-disclaimer {
+  font-size: 11px; color: #3d5a4e;
+  margin-top: 14px; position: relative;
+}
+
+/* ── FOOTER MAIN ── */
+.atr-footer-main {
+  padding: 72px 40px 56px;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+}
+
+/* Brand column */
+.atr-footer-brand .atr-footer-logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 5px;
+  text-transform: uppercase; color: #e2ebe6;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.atr-footer-logo-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%; background: #4a9e74;
+  box-shadow: 0 0 10px rgba(74,158,116,0.6);
+  flex-shrink: 0;
+}
+.atr-footer-brand-desc {
+  font-size: 13px; line-height: 1.7;
+  color: #5a7a6c; max-width: 240px;
+  margin-bottom: 28px;
+}
+.atr-footer-social {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.atr-social-link {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(168,191,178,0.15);
+  display: flex; align-items: center; justify-content: center;
+  color: #7d9e90; text-decoration: none;
+  transition: all 0.3s;
+}
+.atr-social-link:hover {
+  border-color: rgba(74,158,116,0.5);
+  color: #4a9e74;
+  box-shadow: 0 0 16px rgba(74,158,116,0.2);
+}
+.atr-social-link svg { width: 16px; height: 16px; }
+
+/* Link columns */
+.atr-footer-col-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 3px;
+  text-transform: uppercase; color: #4a9e74;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+.atr-footer-col-title::before {
+  content: ''; display: block;
+  width: 12px; height: 1px; background: #4a9e74; flex-shrink: 0;
+}
+.atr-footer-col ul {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.atr-footer-col ul li a {
+  font-size: 13px; color: #7d9e90;
+  text-decoration: none;
+  transition: color 0.25s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.atr-footer-col ul li a:hover { color: #c8d8ce; }
+.atr-footer-col ul li a:hover::before {
+  content: '→'; font-size: 10px;
+  color: #4a9e74;
+}
+
+/* ── DIVIDER ── */
+.atr-footer-divider {
+  max-width: 1280px; margin: 0 auto;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(168,191,178,0.12), transparent);
+  padding: 0 40px;
+}
+.atr-footer-divider-inner {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(168,191,178,0.12), transparent);
+}
+
+/* ── FOOTER BOTTOM ── */
+.atr-footer-bottom {
+  padding: 24px 40px 32px;
+  max-width: 1280px; margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; gap: 16px;
+}
+.atr-footer-legal {
+  display: flex; align-items: center;
+  flex-wrap: wrap; gap: 4px 16px;
+}
+.atr-footer-copy {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 1.5px;
+  color: #3d5a4e;
+  text-transform: uppercase;
+}
+.atr-footer-legal-links {
+  display: flex; gap: 16px; flex-wrap: wrap;
+}
+.atr-footer-legal-links a {
+  font-size: 11px; color: #3d5a4e;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.atr-footer-legal-links a:hover { color: #7d9e90; }
+
+/* Payment icons */
+.atr-footer-payment {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.atr-payment-icon {
+  height: 22px; width: auto;
+  filter: brightness(0.5) saturate(0);
+  transition: filter 0.3s; border-radius: 3px;
+  opacity: 0.6;
+}
+.atr-payment-icon:hover { filter: brightness(0.8) saturate(0.5); opacity: 1; }
+.atr-payment-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 7px; letter-spacing: 1px;
+  color: #3d5a4e; text-transform: uppercase;
+  border: 1px solid rgba(168,191,178,0.1);
+  border-radius: 4px; padding: 4px 8px;
+  white-space: nowrap;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 960px) {
+  .atr-footer-main {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    padding: 56px 24px 40px;
+  }
+  .atr-footer-brand { grid-column: 1 / -1; }
+  .atr-footer-brand-desc { max-width: 100%; }
+}
+@media (max-width: 600px) {
+  .atr-nl { padding: 48px 20px; }
+  .atr-nl-form { flex-direction: column; }
+  .atr-nl-input { border-right: 1px solid rgba(168,191,178,0.2); border-radius: 6px; }
+  .atr-nl-btn { border-radius: 6px; padding: 14px; }
+  .atr-footer-main { grid-template-columns: 1fr; padding: 48px 20px 32px; }
+  .atr-footer-bottom { flex-direction: column; align-items: flex-start; padding: 20px; gap: 20px; }
+}
+</style>
+
+<div class="atr-footer-wrap">
+
+  <!-- ══ NEWSLETTER ══ -->
+  <div class="atr-nl">
+    <div class="atr-nl-eyebrow">Exklusiver Zugang</div>
+    <h2 class="atr-nl-heading">Dein Duft. <em>Deine Geschichte.</em></h2>
+    <p class="atr-nl-sub">Erhalte Insider-Tipps zur Parfümherstellung, neue Essenz-Kollektionen und exklusive Angebote direkt ins Postfach.</p>
+
+    {% form 'customer' %}
+      <input type="hidden" name="contact[tags]" value="newsletter,atramenti-subscriber">
+      <div class="atr-nl-form">
+        <input
+          class="atr-nl-input"
+          type="email"
+          name="contact[email]"
+          placeholder="deine@email.de"
+          required
+          autocomplete="email"
+        >
+        <button type="submit" class="atr-nl-btn">Abonnieren</button>
+      </div>
+      {%- if form.posted_successfully? -%}
+        <p style="color:#4a9e74;font-size:13px;margin-top:16px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;">
+          ✓ Willkommen in der Atramenti-Community.
+        </p>
+      {%- endif -%}
+    {% endform %}
+
+    <p class="atr-nl-disclaimer">Kein Spam. Abmeldung jederzeit möglich. · Datenschutz beachtet.</p>
+  </div>
+
+  <!-- ══ FOOTER MAIN ══ -->
+  <div class="atr-footer-main">
+
+    <!-- Brand Column -->
+    <div class="atr-footer-brand">
+      <a href="{{ routes.root_url }}" class="atr-footer-logo">
+        <span class="atr-footer-logo-dot"></span>Atramenti
+      </a>
+      <p class="atr-footer-brand-desc">
+        Wir glauben, dass ein Duft mehr ist als ein Parfum — er ist eine Erinnerung, eine Emotion, eine Geschichte. Erschaffe deinen Signature-Duft online, individuell und mit Leidenschaft.
+      </p>
+      <div class="atr-footer-social">
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/atramentiofficial" target="_blank" rel="noopener" class="atr-social-link" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@atramentiofficial" target="_blank" rel="noopener" class="atr-social-link" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>
+          </svg>
+        </a>
+
+        <!-- Pinterest -->
+        <a href="https://www.pinterest.com/atramentiofficial" target="_blank" rel="noopener" class="atr-social-link" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.852 0 1.265.64 1.265 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.135-1.867 3.135-4.56 0-2.385-1.715-4.052-4.164-4.052-2.838 0-4.504 2.128-4.504 4.328 0 .857.33 1.775.742 2.278a.3.3 0 0 1 .069.284l-.277 1.133c-.044.183-.146.222-.336.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- Navigation Column -->
+    <div class="atr-footer-col">
+      <div class="atr-footer-col-title">Navigation</div>
+      <ul>
+        <li><a href="{{ routes.root_url }}">Startseite</a></li>
+        <li><a href="/pages/konfigurator">Duft kreieren</a></li>
+        <li><a href="/pages/kurs-buchen">Workshop</a></li>
+        <li><a href="/pages/about">Über uns</a></li>
+        <li><a href="{{ routes.cart_url }}">Warenkorb</a></li>
+      </ul>
+    </div>
+
+    <!-- Rechtliches Column -->
+    <div class="atr-footer-col">
+      <div class="atr-footer-col-title">Rechtliches</div>
+      <ul>
+        <li><a href="/pages/impressum">Impressum</a></li>
+        <li><a href="/pages/datenschutz">Datenschutzerklärung</a></li>
+        <li><a href="/pages/agb">AGB</a></li>
+        <li><a href="/pages/widerrufsrecht">Widerrufsrecht</a></li>
+        <li><a href="/pages/cookies">Cookie-Richtlinie</a></li>
+      </ul>
+    </div>
+
+    <!-- Service Column -->
+    <div class="atr-footer-col">
+      <div class="atr-footer-col-title">Service</div>
+      <ul>
+        <li><a href="/pages/faq">FAQ</a></li>
+        <li><a href="/pages/contact">Kontakt</a></li>
+        <li><a href="/pages/versand">Versand & Lieferung</a></li>
+        <li><a href="/pages/rueckgabe">Rückgabe & Umtausch</a></li>
+        <li><a href="/pages/nachhaltigkeit">Nachhaltigkeit</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- ══ DIVIDER ══ -->
+  <div style="padding:0 40px;"><div class="atr-footer-divider-inner"></div></div>
+
+  <!-- ══ BOTTOM BAR ══ -->
+  <div class="atr-footer-bottom">
+
+    <div class="atr-footer-legal">
+      <span class="atr-footer-copy">© {{ 'now' | date: '%Y' }} Atramenti — Alle Rechte vorbehalten</span>
+      <div class="atr-footer-legal-links">
+        <a href="/pages/impressum">Impressum</a>
+        <a href="/pages/datenschutz">Datenschutz</a>
+        <a href="/pages/agb">AGB</a>
+        <a href="/pages/widerrufsrecht">Widerruf</a>
+      </div>
+    </div>
+
+    <div class="atr-footer-payment">
+      <span class="atr-payment-badge">Sichere Zahlung</span>
+      {% for type in shop.enabled_payment_types %}
+        {{ type | payment_type_svg_tag: class: 'atr-payment-icon' }}
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Atramenti Footer",
+  "tag": "section",
+  "class": "atramenti-footer-section",
+  "settings": [],
+  "presets": [{ "name": "Atramenti Footer" }]
+}
+{% endschema %}

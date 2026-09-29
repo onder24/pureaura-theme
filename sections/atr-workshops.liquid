@@ -1,0 +1,418 @@
+<div class="atr-scope atr-ws">
+  <div class="atr-container">
+    <h2 class="atr-ws__heading">
+      {{ section.settings.heading_line_1 }}<br>{{ section.settings.heading_line_2 }}
+    </h2>
+
+    {%- if section.settings.subline != blank -%}
+      <p class="atr-ws__subline">{{ section.settings.subline }}</p>
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Medien-Rail: Video zuerst, weitere Slides bleiben angeschnitten. {%- endcomment -%}
+  <div class="atr-ws__rail">
+    <div class="atr-ws__slide atr-ws__slide--video">
+      <button class="atr-ws__video" type="button" aria-label="Video abspielen" data-atr-ws-play>
+        {%- if section.settings.poster != blank -%}
+          {{
+            section.settings.poster
+            | image_url: width: 1600
+            | image_tag: loading: 'lazy', sizes: '86vw', widths: '600,900,1200,1600', alt: ''
+          }}
+        {%- else -%}
+          <img src="{{ 'oil-palo-santo.jpg' | asset_url }}" alt="" width="890" height="1200" loading="lazy">
+        {%- endif -%}
+
+        <span class="atr-ws__playwrap">
+          <span class="atr-ws__play">
+            <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true" focusable="false">
+              <path d="M2 1.5 14.5 9 2 16.5V1.5Z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </span>
+      </button>
+    </div>
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'slide' -%}
+        <div class="atr-ws__slide" {{ block.shopify_attributes }}>
+          <div class="atr-ws__media">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 900
+                | image_tag: loading: 'lazy', sizes: '60vw', widths: '300,500,700,900', alt: ''
+              }}
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="atr-container">
+    <div class="atr-ws__cards">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'card' -%}
+          <a href="{{ block.settings.link | default: '#' }}" class="atr-ws__card" {{ block.shopify_attributes }}>
+            <span class="atr-ws__cardtitle">{{ block.settings.title }}</span>
+            <span class="atr-ws__cardtext">{{ block.settings.text }}</span>
+            <span class="atr-ws__cardprice">{{ block.settings.price }}</span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="atr-ws__cta">
+        <a href="{{ section.settings.cta_link | default: '#' }}" class="atr-btn atr-btn--solid">
+          {{ section.settings.cta_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{%- comment -%} Lightbox {%- endcomment -%}
+<div class="atr-scope atr-ws__lightbox" data-atr-ws-lightbox hidden>
+  <div class="atr-ws__lightbox-inner">
+    <button type="button" class="atr-ws__close" data-atr-ws-close>Schließen</button>
+    <div class="atr-ws__frame">
+      {%- if section.settings.embed_url != blank -%}
+        <iframe
+          src="{{ section.settings.embed_url }}"
+          title="Atramenti Atelier"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      {%- else -%}
+        <p class="atr-ws__hint">Noch kein Video hinterlegt — Embed-URL in der Sektion setzen</p>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-ws {
+    width: 100%;
+    background-color: var(--atr-sand);
+    color: var(--atr-ink);
+    padding-block: 64px;
+    text-align: center;
+  }
+
+  .atr-ws__heading {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 1.7;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-wide2);
+  }
+
+  .atr-ws__subline {
+    margin: 20px auto 0;
+    max-width: 20rem;
+    font-size: 14px;
+    font-style: italic;
+    line-height: 1.75;
+    color: var(--atr-muted);
+  }
+
+  .atr-ws__rail {
+    display: flex;
+    gap: 16px;
+    margin-top: 48px;
+    padding-inline: var(--atr-gutter);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .atr-ws__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .atr-ws__slide {
+    flex: 0 0 auto;
+    width: 60vw;
+    scroll-snap-align: start;
+  }
+
+  .atr-ws__slide--video {
+    width: 86vw;
+  }
+
+  .atr-ws__video,
+  .atr-ws__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    border: 0;
+    background: rgba(10, 10, 10, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .atr-scope .atr-ws__video img,
+  .atr-scope .atr-ws__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .atr-ws__playwrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .atr-scope .atr-ws__play {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(10, 10, 10, 0.25);
+    color: var(--atr-paper);
+    transition: background-color 0.3s ease;
+  }
+
+  .atr-ws__video:hover .atr-ws__play {
+    background: rgba(10, 10, 10, 0.45);
+  }
+
+  .atr-ws__cards {
+    display: grid;
+    gap: 16px;
+    margin-top: 48px;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+
+  .atr-ws__card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    text-align: left;
+    text-decoration: none;
+    color: var(--atr-ink);
+    background: var(--atr-paper);
+    border: 1px solid var(--atr-mist);
+    transition: background-color 0.3s ease;
+  }
+
+  .atr-ws__card:hover {
+    background: #ffffff;
+    border-color: var(--atr-ink);
+  }
+
+  .atr-ws__cardtitle {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+  }
+
+  .atr-ws__cardtext {
+    font-size: 14px;
+    color: var(--atr-muted);
+  }
+
+  .atr-ws__cardprice {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .atr-ws__cta {
+    margin-top: 40px;
+  }
+
+  /* Lightbox */
+  .atr-ws__lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(10, 10, 10, 0.9);
+  }
+
+  .atr-ws__lightbox[hidden] {
+    display: none;
+  }
+
+  .atr-ws__lightbox-inner {
+    position: relative;
+    width: 100%;
+    max-width: 56rem;
+  }
+
+  .atr-ws__close {
+    position: absolute;
+    top: -32px;
+    right: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--atr-paper);
+    font-family: var(--atr-font);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+  }
+
+  .atr-ws__frame {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: var(--atr-ink);
+  }
+
+  .atr-ws__frame iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  .atr-ws__hint {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 24px;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-ws__heading {
+      font-size: 30px;
+    }
+
+    .atr-ws__rail {
+      gap: 24px;
+    }
+
+    .atr-ws__slide--video {
+      width: min(56rem, 72vw);
+    }
+
+    .atr-ws__slide {
+      width: 22rem;
+    }
+
+    .atr-ws__video,
+    .atr-ws__media {
+      aspect-ratio: 16 / 9;
+    }
+
+    .atr-ws__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var play = document.querySelector('[data-atr-ws-play]');
+    var box = document.querySelector('[data-atr-ws-lightbox]');
+    var close = document.querySelector('[data-atr-ws-close]');
+    if (!play || !box) return;
+
+    function open() {
+      box.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function shut() {
+      box.hidden = true;
+      document.body.style.overflow = '';
+    }
+
+    play.addEventListener('click', open);
+    if (close) close.addEventListener('click', shut);
+
+    box.addEventListener('click', function (event) {
+      if (event.target === box) shut();
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape') shut();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "ATR Workshops",
+  "tag": "section",
+  "class": "atr-section-workshops",
+  "settings": [
+    { "type": "text", "id": "heading_line_1", "label": "Überschrift Zeile 1", "default": "Step inside our" },
+    { "type": "text", "id": "heading_line_2", "label": "Überschrift Zeile 2", "default": "World of Scent" },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Kursive Subline",
+      "default": "Wo wir die Werkzeuge fertigen – und du zum Parfumeur wirst."
+    },
+    { "type": "image_picker", "id": "poster", "label": "Video-Poster" },
+    {
+      "type": "text",
+      "id": "embed_url",
+      "label": "Video-Embed-URL",
+      "info": "z.B. https://www.youtube-nocookie.com/embed/<id>"
+    },
+    { "type": "text", "id": "cta_label", "label": "Button-Text", "default": "Alle Workshops" },
+    { "type": "url", "id": "cta_link", "label": "Button-Link" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Weiteres Medium",
+      "limit": 4,
+      "settings": [{ "type": "image_picker", "id": "image", "label": "Bild" }]
+    },
+    {
+      "type": "card",
+      "name": "Workshop-Karte",
+      "limit": 4,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Beginner-Workshop" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Set nach Hause + Live-Session" },
+        { "type": "text", "id": "price", "label": "Preis", "default": "129 €" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Workshops",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "card", "settings": { "title": "Beginner-Workshop", "text": "Set nach Hause + Live-Session", "price": "129 €" } },
+        { "type": "card", "settings": { "title": "Eigene Marke", "text": "Digital, für Gründer:innen", "price": "399 €" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

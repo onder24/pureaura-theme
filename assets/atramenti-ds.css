@@ -1,0 +1,542 @@
+/* ==========================================================================
+   ATRAMENTI — Design System
+   Portiert aus dem Next.js-Referenzprojekt (atramenti-web).
+   Alle Klassen sind mit .atr- praefixiert, damit sie nicht mit
+   atramenti.css / base.css kollidieren.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Schrift: Jost (selbst gehostet, variable)
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: 'Jost DS';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('jost-variable.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Jost DS';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('jost-variable-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --------------------------------------------------------------------------
+   2. Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  --atr-ink: #0a0a0a;
+  --atr-paper: #ffffff;
+  --atr-stone: #b8aea3;
+  --atr-sand: #f4f1ec;
+  --atr-mist: #e6e6e6;
+  --atr-muted: #6b6b6b;
+
+  --atr-font: 'Jost DS', 'Jost', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Laufweiten */
+  --atr-tracking-display: 0.25em;
+  --atr-tracking-wide2: 0.3em;
+  --atr-tracking-wide3: 0.35em;
+  --atr-tracking-widest: 0.1em;
+
+  /* Container */
+  --atr-container: 1400px;
+  --atr-gutter: 20px;
+
+  /* Rhythmus */
+  --atr-section-y: 72px;
+}
+
+@media screen and (min-width: 768px) {
+  :root {
+    --atr-gutter: 40px;
+    --atr-section-y: 120px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Basis — nur innerhalb von .atr-scope, damit der Rest des Themes
+      unangetastet bleibt.
+   -------------------------------------------------------------------------- */
+.atr-scope {
+  font-family: var(--atr-font);
+  font-size: 15px;
+  line-height: 1.75;
+  font-weight: 300;
+  color: var(--atr-ink);
+  background-color: var(--atr-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media screen and (min-width: 768px) {
+  .atr-scope {
+    font-size: 16px;
+  }
+}
+
+.atr-scope *,
+.atr-scope *::before,
+.atr-scope *::after {
+  box-sizing: border-box;
+  border-radius: 0;
+}
+
+/*
+ * Dawn blendet in base.css alle leeren Container aus (div:empty -> display: none).
+ * Unsere dekorativen Layer — Scrims, Verlaeufe, Fallback-Flaechen — sind bewusst
+ * leer und wuerden sonst verschwinden. Hoehere Spezifitaet holt sie zurueck.
+ */
+.atr-scope [class*='atr-']:empty {
+  display: block;
+}
+
+.atr-scope img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.atr-scope ::selection {
+  background: var(--atr-ink);
+  color: var(--atr-paper);
+}
+
+/* --------------------------------------------------------------------------
+   4. Layout
+   -------------------------------------------------------------------------- */
+.atr-container {
+  width: 100%;
+  max-width: var(--atr-container);
+  margin-inline: auto;
+  padding-inline: var(--atr-gutter);
+}
+
+.atr-section {
+  padding-block: var(--atr-section-y);
+}
+
+.atr-section--tight {
+  padding-block: calc(var(--atr-section-y) * 0.55);
+}
+
+.atr-section--dark {
+  /* Historischer Name — die Flaeche ist jetzt hell gesetzt. */
+  background-color: var(--atr-sand);
+  color: var(--atr-ink);
+}
+
+.atr-section--sand {
+  background-color: var(--atr-sand);
+}
+
+.atr-section--stone {
+  background-color: var(--atr-stone);
+}
+
+.atr-section--hairline {
+  border-bottom: 1px solid var(--atr-mist);
+}
+
+/* Sektion mit vertikalem Randlabel */
+.atr-labelled {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+@media screen and (min-width: 768px) {
+  .atr-labelled {
+    gap: 32px;
+  }
+}
+
+.atr-labelled__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   5. Typografie
+   -------------------------------------------------------------------------- */
+.atr-h-display {
+  font-family: var(--atr-font);
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-display);
+  font-weight: 300;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.atr-h-display--wide {
+  letter-spacing: var(--atr-tracking-wide3);
+}
+
+.atr-h1 {
+  font-size: clamp(28px, 7vw, 64px);
+}
+
+.atr-h2 {
+  font-size: clamp(22px, 4.5vw, 40px);
+}
+
+.atr-h3 {
+  font-size: clamp(16px, 2.4vw, 22px);
+}
+
+.atr-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-wide2);
+  color: var(--atr-muted);
+  margin: 0;
+}
+
+.atr-section--dark .atr-eyebrow {
+  color: var(--atr-stone);
+}
+
+.atr-body {
+  font-size: inherit;
+  line-height: 1.75;
+  color: var(--atr-ink);
+  margin: 0;
+}
+
+.atr-body--muted {
+  color: var(--atr-muted);
+}
+
+.atr-section--dark .atr-body--muted {
+  color: var(--atr-stone);
+}
+
+/* Kursive Subline / Zitat */
+.atr-subline {
+  font-style: italic;
+  color: var(--atr-muted);
+}
+
+.atr-section--dark .atr-subline {
+  color: var(--atr-stone);
+}
+
+/* Vertikaler Randtext: TRENDING / THE MODERN MINIMALIST / IN STORE EXPERIENCES */
+.atr-label-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-wide2);
+  font-size: 11px;
+  color: var(--atr-muted);
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.atr-section--dark .atr-label-vertical {
+  color: var(--atr-stone);
+}
+
+/* Masszahl fuer Preise / Volumen */
+.atr-meta {
+  font-size: 12px;
+  letter-spacing: var(--atr-tracking-widest);
+  color: var(--atr-muted);
+}
+
+/* --------------------------------------------------------------------------
+   6. Buttons
+   -------------------------------------------------------------------------- */
+.atr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--atr-font);
+  font-size: 12px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-widest);
+  padding: 16px 32px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.atr-btn--solid {
+  background-color: var(--atr-ink);
+  color: var(--atr-paper);
+  border-color: var(--atr-ink);
+}
+
+.atr-btn--solid:hover {
+  background-color: var(--atr-paper);
+  color: var(--atr-ink);
+}
+
+.atr-btn--outline {
+  background-color: transparent;
+  color: var(--atr-ink);
+  border-color: var(--atr-ink);
+}
+
+.atr-btn--outline:hover {
+  background-color: var(--atr-ink);
+  color: var(--atr-paper);
+}
+
+.atr-btn--inverted {
+  background-color: var(--atr-paper);
+  color: var(--atr-ink);
+  border-color: var(--atr-paper);
+}
+
+.atr-btn--inverted:hover {
+  background-color: transparent;
+  color: var(--atr-paper);
+}
+
+.atr-btn:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   7. Textlink mit 1px-Unterstrich
+   -------------------------------------------------------------------------- */
+.atr-textlink {
+  display: inline-block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-widest);
+  text-decoration: none;
+  color: var(--atr-ink);
+  border-bottom: 1px solid var(--atr-ink);
+  padding-bottom: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.atr-textlink:hover {
+  border-bottom-color: transparent;
+}
+
+.atr-textlink--paper {
+  color: var(--atr-paper);
+  border-bottom-color: var(--atr-paper);
+}
+
+.atr-textlink--paper:hover {
+  border-bottom-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   8. Grids
+   -------------------------------------------------------------------------- */
+.atr-grid {
+  display: grid;
+  gap: 32px;
+}
+
+.atr-grid--2 {
+  grid-template-columns: 1fr;
+}
+
+.atr-grid--3,
+.atr-grid--4 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .atr-grid--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 48px;
+  }
+
+  .atr-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px;
+  }
+
+  .atr-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 40px;
+  }
+}
+
+/* Horizontaler Scroller auf Mobile (Trending) */
+.atr-rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 68%;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  margin-inline: calc(var(--atr-gutter) * -1);
+  padding-inline: var(--atr-gutter);
+}
+
+.atr-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.atr-rail > * {
+  scroll-snap-align: start;
+}
+
+@media screen and (min-width: 768px) {
+  .atr-rail {
+    grid-auto-columns: 30%;
+    gap: 32px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. Media
+   -------------------------------------------------------------------------- */
+.atr-media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--atr-mist);
+}
+
+.atr-media > img,
+.atr-media > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.atr-media--portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.atr-media--square {
+  aspect-ratio: 1 / 1;
+}
+
+.atr-media--landscape {
+  aspect-ratio: 4 / 3;
+}
+
+.atr-media--wide {
+  aspect-ratio: 16 / 9;
+}
+
+.atr-media--tall {
+  aspect-ratio: 2 / 3;
+}
+
+.atr-media__zoom {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+a:hover .atr-media__zoom {
+  transform: scale(1.03);
+}
+
+/* --------------------------------------------------------------------------
+   10. Produktkarte
+   -------------------------------------------------------------------------- */
+.atr-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.atr-card__media {
+  background-color: var(--atr-sand);
+}
+
+.atr-card__body {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.atr-card__name {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-widest);
+  font-weight: 400;
+  margin: 0;
+}
+
+.atr-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: var(--atr-tracking-wide2);
+  background: var(--atr-paper);
+  color: var(--atr-ink);
+  padding: 6px 10px;
+}
+
+/* --------------------------------------------------------------------------
+   11. Hilfsklassen
+   -------------------------------------------------------------------------- */
+.atr-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.atr-stack--xs > * + * { margin-top: 8px; }
+.atr-stack--sm > * + * { margin-top: 16px; }
+.atr-stack--md > * + * { margin-top: 24px; }
+.atr-stack--lg > * + * { margin-top: 40px; }
+
+.atr-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.atr-center { text-align: center; }
+.atr-measure { max-width: 46ch; }
+.atr-measure--wide { max-width: 62ch; }
+.atr-hr { border: 0; border-top: 1px solid var(--atr-mist); margin: 0; }
+.atr-section--dark .atr-hr { border-top-color: rgba(255, 255, 255, 0.18); }
+
+.atr-visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Sektionsheader: Titel links, Link rechts */
+.atr-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+@media screen and (max-width: 749px) {
+  .atr-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+}

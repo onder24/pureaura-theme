@@ -1,0 +1,185 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "atr_hero": {
+      "type": "atr-hero",
+      "settings": {
+        "image": "shopify://shop_images/Untitled_Project_-_artboard-1.jpg",
+        "heading": "Dein Duft. In Tinte geschrieben.",
+        "subline": "Die Welt braucht kein weiteres Parfum. Sie braucht deins.",
+        "link_1_label": "Date-Night-Set entdecken",
+        "link_1_url": "/collections/date-night-set",
+        "link_2_label": "Signature-Düfte",
+        "link_2_url": "/collections/signature"
+      }
+    },
+    "atr_press": {
+      "type": "atr-press-logos",
+      "blocks": {
+        "l1": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l2": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l3": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l4": {
+          "type": "logo",
+          "settings": {}
+        },
+        "l5": {
+          "type": "logo",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "l1",
+        "l2",
+        "l3",
+        "l4",
+        "l5"
+      ],
+      "settings": {}
+    },
+    "atr_values": {
+      "type": "atr-values",
+      "settings": {}
+    },
+    "atr_newsletter": {
+      "type": "atr-newsletter",
+      "settings": {}
+    },
+    "atr_signature": {
+      "type": "atr-signature-slider",
+      "settings": {
+        "label": "Signature",
+        "eyebrow": "Signature Collection",
+        "collection": "signature",
+        "limit": 3
+      }
+    },
+    "atr_datenight": {
+      "type": "atr-date-night",
+      "blocks": {
+        "b1": {
+          "type": "point",
+          "settings": {
+            "icon": "sliders",
+            "label": "Konfigurierbar"
+          }
+        },
+        "b2": {
+          "type": "point",
+          "settings": {
+            "icon": "people",
+            "label": "Für 2 Personen"
+          }
+        },
+        "b3": {
+          "type": "point",
+          "settings": {
+            "icon": "truck",
+            "label": "Versandfertig in 48 h"
+          }
+        }
+      },
+      "block_order": [
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "marquee_text": "Date Night Set  ·  Write your scent  ·  ",
+        "cta_label": "Set konfigurieren",
+        "cta_link": "/collections/date-night-set"
+      }
+    },
+    "atr_wedding": {
+      "type": "atr-labeled-image",
+      "settings": {
+        "label": "Hochzeit",
+        "text": "<p>Ein Duft, der euren Tag festhält. Das Hochzeitspaket vereint das Date-Night-Set mit Gravur, Premium-Box und einem Zertifikat mit eurem Datum – und auf Wunsch Gastgeschenke für alle, die dabei waren.</p>",
+        "note": "Hochzeitspaket ab 199 €",
+        "link_label": "Zum Hochzeitspaket",
+        "link_url": "/pages/hochzeit",
+        "image_position": "right"
+      }
+    },
+    "atr_workshops": {
+      "type": "atr-workshops",
+      "blocks": {
+        "s1": {
+          "type": "slide",
+          "settings": {}
+        },
+        "s2": {
+          "type": "slide",
+          "settings": {}
+        },
+        "c1": {
+          "type": "card",
+          "settings": {
+            "title": "Beginner-Workshop",
+            "text": "Set nach Hause + Live-Session",
+            "price": "129 €",
+            "link": "/pages/workshops#beginner"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "title": "Eigene Marke",
+            "text": "Digital, für Gründer:innen",
+            "price": "399 €",
+            "link": "/pages/workshops#eigene-marke"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "c1",
+        "c2"
+      ],
+      "settings": {
+        "cta_label": "Alle Workshops",
+        "cta_link": "/pages/workshops"
+      }
+    },
+    "atr_corporate": {
+      "type": "atr-labeled-image",
+      "settings": {
+        "label": "Firmenevents",
+        "text": "<p>Teambuilding, das bleibt. Wir bringen das Blending-Erlebnis zu euch – vor Ort oder remote, ab 10 Personen, auf Wunsch mit Live-Moderation.</p>",
+        "note": "ab 39 € pro Person",
+        "link_label": "Angebot anfragen",
+        "link_url": "/pages/firmenevents",
+        "image_position": "right"
+      }
+    }
+  },
+  "order": [
+    "atr_hero",
+    "atr_signature",
+    "atr_datenight",
+    "atr_wedding",
+    "atr_workshops",
+    "atr_corporate",
+    "atr_press",
+    "atr_values",
+    "atr_newsletter"
+  ]
+}

@@ -1,0 +1,224 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "button",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "show_gift_card_recipient": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "share"
+      ],
+      "settings": {
+        "enable_sticky_info": true,
+        "color_scheme": "scheme-1",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "stacked",
+        "mobile_thumbnails": "hide",
+        "media_position": "left",
+        "image_zoom": "lightbox",
+        "hide_variants": true,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 52
+      }
+    },
+    "marquee_qHfbYk": {
+      "type": "marquee",
+      "blocks": {
+        "text_qfRiM9": {
+          "type": "text",
+          "settings": {
+            "new_text": "Reviews"
+          }
+        },
+        "text_wTjTCn": {
+          "type": "text",
+          "settings": {
+            "new_text": "Reviews"
+          }
+        }
+      },
+      "block_order": [
+        "text_qfRiM9",
+        "text_wTjTCn"
+      ],
+      "name": "Marquee",
+      "settings": {
+        "colorBackground": "#e39297",
+        "colorText": "#ffffff",
+        "link": "",
+        "marquee_height": 44,
+        "font_size": 16
+      }
+    },
+    "rich_text_TJp4K3": {
+      "type": "rich-text",
+      "blocks": {
+        "heading_myftqE": {
+          "type": "heading",
+          "settings": {
+            "heading": "Testimonials",
+            "heading_size": "h0"
+          }
+        }
+      },
+      "block_order": [
+        "heading_myftqE"
+      ],
+      "name": "t:sections.rich-text.presets.name",
+      "settings": {
+        "desktop_content_position": "center",
+        "content_alignment": "center",
+        "color_scheme": "",
+        "full_width": true,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "multicolumn_xgNXDD": {
+      "type": "multicolumn",
+      "blocks": {
+        "column_FnKKQW": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/1.png",
+            "imglink": "",
+            "title": "★★★★★",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_UgWanT": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/3.png",
+            "imglink": "",
+            "title": "★★★★★",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column_cAYNDL": {
+          "type": "column",
+          "settings": {
+            "image": "shopify://shop_images/2.png",
+            "imglink": "",
+            "title": "★★★★★",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column_FnKKQW",
+        "column_UgWanT",
+        "column_cAYNDL"
+      ],
+      "name": "t:sections.multicolumn.presets.name",
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "portrait",
+        "button_label": "",
+        "button_link": "",
+        "columns_desktop": 3,
+        "column_alignment": "center",
+        "background_style": "primary",
+        "color_scheme": "",
+        "columns_mobile": "1",
+        "swipe_on_mobile": true,
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "padding_top": 44,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "marquee_qHfbYk",
+    "rich_text_TJp4K3",
+    "multicolumn_xgNXDD",
+    "related-products"
+  ]
+}

@@ -1,0 +1,240 @@
+/* ══════════════════════════════════════════════════════════
+   ATRAMENTI DESIGN SYSTEM  ·  Forest & Amber
+   Tokens + primitives. Loaded once from layout/theme.liquid.
+   @font-face lives in theme.liquid (needs Liquid asset_url).
+
+   Palette rule: ONE accent (amber) across the whole page.
+   Radius rule:  surfaces and images 0, controls 2px. No exceptions.
+   Contrast:     ink 13.5:1, ink-dim 6.2:1, amber 5.9:1 on bg.
+                 Amber buttons carry DARK ink, never white (2.5:1).
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Surfaces */
+  --atm-bg: #141f19;
+  --atm-bg-2: #1b2a22;
+  --atm-bg-3: #223328;
+
+  /* Ink */
+  --atm-ink: #e6e3d9;
+  --atm-ink-dim: #92a099;
+
+  /* Single accent */
+  --atm-accent: #c4893f;
+  --atm-accent-hi: #d79a4d;
+  --atm-accent-soft: rgba(196, 137, 63, 0.14);
+
+  /* Lines */
+  --atm-line: rgba(230, 227, 217, 0.12);
+  --atm-line-strong: rgba(230, 227, 217, 0.22);
+
+  /* Type */
+  --atm-display: 'Cabinet Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --atm-body: 'Satoshi', 'Helvetica Neue', Arial, sans-serif;
+
+  /* Rhythm  ·  VISUAL_DENSITY 3 */
+  --atm-pad-y: clamp(80px, 11vw, 152px);
+  --atm-gutter: clamp(20px, 5vw, 64px);
+  --atm-max: 1400px;
+
+  /* Shape */
+  --atm-r: 0px;
+  --atm-r-ctl: 2px;
+
+  --atm-ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Section shell ─────────────────────────────────────── */
+.atm {
+  background: var(--atm-bg);
+  color: var(--atm-ink);
+  font-family: var(--atm-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+.atm-wrap {
+  max-width: var(--atm-max);
+  margin-inline: auto;
+  padding-inline: var(--atm-gutter);
+}
+
+.atm-section {
+  padding-block: var(--atm-pad-y);
+}
+
+/* ── Type ──────────────────────────────────────────────── */
+.atm-display {
+  font-family: var(--atm-display);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  color: var(--atm-ink);
+  text-wrap: balance;
+}
+
+.atm-h1 {
+  font-size: clamp(44px, 6.2vw, 92px);
+}
+
+.atm-h2 {
+  font-size: clamp(34px, 4.4vw, 62px);
+}
+
+/* Emphasis stays in the SAME family (bold/colour), never a second family */
+.atm-display strong {
+  font-weight: 800;
+  color: var(--atm-accent);
+}
+
+.atm-body {
+  font-size: clamp(16px, 1.15vw, 18px);
+  line-height: 1.65;
+  color: var(--atm-ink-dim);
+  max-width: 62ch;
+}
+
+/* Eyebrow. Budget is ceil(sections / 3). Used twice on the homepage. */
+.atm-eyebrow {
+  font-family: var(--atm-body);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--atm-accent);
+}
+
+/* ── Controls ──────────────────────────────────────────── */
+.atm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 17px 36px;
+  border: 1px solid transparent;
+  border-radius: var(--atm-r-ctl);
+  font-family: var(--atm-body);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap; /* CTA must never wrap */
+  cursor: pointer;
+  transition: background-color 0.3s var(--atm-ease), border-color 0.3s var(--atm-ease),
+    color 0.3s var(--atm-ease), transform 0.3s var(--atm-ease);
+}
+
+.atm-btn--primary {
+  background: var(--atm-accent);
+  color: #141f19; /* dark ink on amber = 5.9:1. White would be 2.5:1. */
+}
+
+.atm-btn--primary:hover {
+  background: var(--atm-accent-hi);
+  transform: translateY(-1px);
+}
+
+.atm-btn--ghost {
+  background: transparent;
+  color: var(--atm-ink);
+  border-color: var(--atm-line-strong);
+}
+
+.atm-btn--ghost:hover {
+  border-color: var(--atm-accent);
+  color: var(--atm-accent);
+  transform: translateY(-1px);
+}
+
+.atm-btn:active {
+  transform: scale(0.98);
+}
+
+.atm-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Focus ─────────────────────────────────────────────── */
+.atm a:focus-visible,
+.atm button:focus-visible,
+.atm summary:focus-visible {
+  outline: 2px solid var(--atm-accent);
+  outline-offset: 3px;
+}
+
+/* ── Icons ─────────────────────────────────────────────── */
+.atm-icon {
+  display: block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── Scroll reveal  ·  MOTION_INTENSITY 5 ──────────────── */
+.atm-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--atm-ease), transform 0.7s var(--atm-ease);
+}
+
+.atm-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER BRIDGE
+
+   The footer is stock Dawn on colour scheme-1, which is pure #000000 on
+   pure #ffffff text. Section 9.A rules out both, and against a #141f19
+   page it produced a visible seam at the fold.
+
+   Rather than editing scheme-1 in settings_data.json (shared by the header
+   and other sections), this remaps Dawn's own scheme variables on the
+   footer only. Values are RGB triplets, which is the format Dawn expects.
+   ══════════════════════════════════════════════════════════ */
+.footer {
+  --color-background: 20, 31, 25;
+  --gradient-background: #141f19;
+  --color-background-contrast: 34, 51, 40;
+  --color-foreground: 230, 227, 217;
+  --color-button: 196, 137, 63;
+  --color-button-text: 20, 31, 25;
+  --color-secondary-button: 20, 31, 25;
+  --color-secondary-button-text: 230, 227, 217;
+  --color-link: 230, 227, 217;
+
+  font-family: var(--atm-body);
+  border-top: 1px solid var(--atm-line);
+}
+
+.footer .footer-block__heading,
+.footer .footer__content-bottom h2 {
+  font-family: var(--atm-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Reduced motion: every animation collapses to static ── */
+@media (prefers-reduced-motion: reduce) {
+  .atm-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Safety net. Individual sections degrade explicitly on top of this;
+     `animation: none` returns elements to their un-animated state rather
+     than freezing them mid-keyframe. */
+  .atm *,
+  .atm *::before,
+  .atm *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

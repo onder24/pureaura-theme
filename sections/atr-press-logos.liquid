@@ -1,0 +1,166 @@
+{%- comment -%}
+  Presse-Platzhalter. Bewusst reiner Text: echte Magazinlogos sind geschützte
+  Marken und dürfen nicht nachgebaut werden. Lizenzierte Bilder lassen sich
+  je Block über das Bildfeld einsetzen.
+{%- endcomment -%}
+
+<div class="atr-scope atr-press">
+  <div class="atr-container">
+    {%- if section.settings.heading != blank -%}
+      <p class="atr-press__head">{{ section.settings.heading }}</p>
+    {%- endif -%}
+
+    <ul class="atr-press__grid">
+      {%- for block in section.blocks -%}
+        <li class="atr-press__item atr-press__item--{{ block.settings.style }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 400
+              | image_tag: loading: 'lazy', widths: '150,250,400', alt: block.settings.label
+            }}
+          {%- else -%}
+            {{ block.settings.label }}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .atr-press {
+    border-top: 1px solid var(--atr-mist);
+    padding-block: 48px;
+  }
+
+  .atr-press__head {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--atr-muted);
+  }
+
+  .atr-press__grid {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
+  }
+
+  .atr-press__item {
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: var(--atr-muted);
+  }
+
+  .atr-scope .atr-press__item img {
+    max-height: 22px;
+    width: auto;
+    margin-inline: auto;
+    opacity: 0.55;
+    filter: grayscale(1);
+  }
+
+  /* Vier unterschiedliche Schnitte, damit die Platzhalter nicht uniform wirken. */
+  .atr-press__item--light {
+    font-weight: 300;
+    letter-spacing: var(--atr-tracking-wide3);
+  }
+
+  .atr-press__item--medium {
+    font-weight: 500;
+    letter-spacing: var(--atr-tracking-widest);
+  }
+
+  .atr-press__item--italic {
+    font-weight: 200;
+    font-style: italic;
+    letter-spacing: var(--atr-tracking-wide2);
+  }
+
+  .atr-press__item--regular {
+    font-weight: 400;
+    letter-spacing: var(--atr-tracking-display);
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-press {
+      padding-block: 64px;
+    }
+
+    .atr-press__head {
+      font-size: 16px;
+    }
+
+    .atr-press__grid {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 40px;
+    }
+
+    .atr-press__item {
+      font-size: 14px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Press Logos",
+  "tag": "section",
+  "class": "atr-section-press",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Kursive Überschrift",
+      "default": "Bekannt aus den Magazinen, denen du vertraust"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Eintrag",
+      "limit": 8,
+      "settings": [
+        { "type": "text", "id": "label", "label": "Name", "default": "Magazin Eins" },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo (optional)",
+          "info": "Nur lizenzierte Logos einsetzen."
+        },
+        {
+          "type": "select",
+          "id": "style",
+          "label": "Schriftschnitt",
+          "options": [
+            { "value": "light", "label": "Leicht" },
+            { "value": "medium", "label": "Mittel" },
+            { "value": "italic", "label": "Kursiv" },
+            { "value": "regular", "label": "Normal" }
+          ],
+          "default": "light"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Press Logos",
+      "blocks": [
+        { "type": "logo", "settings": { "label": "Magazin Eins", "style": "light" } },
+        { "type": "logo", "settings": { "label": "Magazin Zwei", "style": "medium" } },
+        { "type": "logo", "settings": { "label": "Magazin Drei", "style": "italic" } },
+        { "type": "logo", "settings": { "label": "Magazin Vier", "style": "regular" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

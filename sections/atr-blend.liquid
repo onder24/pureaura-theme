@@ -1,0 +1,157 @@
+<div class="atr-scope atr-section atr-section--dark">
+  <div class="atr-container">
+    <div class="atr-stack atr-stack--md atr-blend__head">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="atr-eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 class="atr-h-display atr-h2">{{ section.settings.heading }}</h2>
+      {%- if section.settings.subline != blank -%}
+        <p class="atr-subline atr-measure--wide">{{ section.settings.subline }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="atr-grid atr-grid--3 atr-blend__steps">
+      {%- for block in section.blocks -%}
+        <div class="atr-blend__step atr-stack atr-stack--sm" {{ block.shopify_attributes }}>
+          <div class="atr-media atr-media--square">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 800
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 768px) 30vw, 45vw',
+                  widths: '300,500,800',
+                  alt: block.settings.image.alt | default: block.settings.title
+              }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: '' }}
+            {%- endif -%}
+          </div>
+
+          <p class="atr-meta atr-blend__num">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</p>
+          <h3 class="atr-h-display atr-h3">{{ block.settings.title }}</h3>
+          <div class="atr-body atr-body--muted">{{ block.settings.text }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.cta_label != blank -%}
+      <div class="atr-blend__cta">
+        <a href="{{ section.settings.cta_link | default: '#' }}" class="atr-btn atr-btn--solid">
+          {{ section.settings.cta_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  .atr-blend__head {
+    margin-bottom: 48px;
+    max-width: 60ch;
+  }
+
+  .atr-blend__steps .atr-media {
+    background-color: rgba(10, 10, 10, 0.04);
+  }
+
+  .atr-blend__num {
+    color: var(--atr-stone);
+  }
+
+  .atr-blend__cta {
+    margin-top: 48px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .atr-blend__steps {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Blend Section",
+  "tag": "section",
+  "class": "atr-section-blend",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Blend Your Own"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Drei Schritte bis zur eigenen Tinte"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Kursive Subline",
+      "default": "Zwei Basen, ein Akzent — im Atelier gemischt, von Hand beschriftet, in einer Auflage von genau einem."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button-Text",
+      "default": "Duft konfigurieren"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button-Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Schritt",
+      "limit": 4,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Basis wählen" },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Sechs Grundtinten, von hell bis tief. Du entscheidest, worauf dein Duft geschrieben wird.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Blend Section",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "title": "Basis wählen",
+            "text": "<p>Sechs Grundtinten, von hell bis tief. Du entscheidest, worauf dein Duft geschrieben wird.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Akzent setzen",
+            "text": "<p>Ein einzelner Rohstoff verschiebt die ganze Komposition. Wir zeigen dir, welcher.</p>"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "title": "Signieren",
+            "text": "<p>Name, Charge, Datum. Von Hand auf das Etikett geschrieben, bevor der Flakon versiegelt wird.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

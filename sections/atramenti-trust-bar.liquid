@@ -1,0 +1,171 @@
+{% comment %}
+  ATRAMENTI TRUST BAR  ·  Forest & Amber
+
+  The one marquee on the page (Section 5 caps it at one). Motivated: it
+  carries seven short trust signals that would otherwise need a whole
+  section, and none of them deserves individual attention.
+
+  Changed:
+  - Removed "Jetzt · 23 kreieren gerade". A live counter with no live data
+    behind it is fabricated social proof.
+  - Dingbats (the geometric glyph set) replaced with Phosphor icons.
+  - Middle-dot separators replaced with hairlines.
+  - role="marquee" is not a real ARIA role. The duplicate track needed for
+    the seamless loop is now aria-hidden so it is not announced twice.
+  - Under prefers-reduced-motion the track stops and becomes a normal
+    horizontally scrollable row.
+{% endcomment %}
+
+<div class="atm atm-trust">
+  <div class="atm-trust-viewport">
+    <div class="atm-trust-track">
+      {%- for pass in (1..2) -%}
+        <ul class="atm-trust-set"{% if pass == 2 %} aria-hidden="true"{% endif %}>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'star-fill' %}</span>
+            4,9 von 5 bei über 10.000 Bewertungen
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'truck' %}</span>
+            48h Lieferung
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'leaf' %}</span>
+            CO<sub>2</sub>-neutral verpackt
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'flask' %}</span>
+            28 Nischen-Essenzen
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'arrow-counter-clockwise' %}</span>
+            Kostenloser Rückversand
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'recycle' %}</span>
+            Plastikfreie Verpackung
+          </li>
+          <li class="atm-trust-item">
+            <span class="atm-trust-icon">{% render 'atm-icon', name: 'drop' %}</span>
+            Wiederbefüllbare Flakons
+          </li>
+        </ul>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atm-trust {
+    background: var(--atm-bg-2);
+    border-block: 1px solid var(--atm-line);
+  }
+
+  .atm-trust-viewport {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fade the edges into the bar background so items do not pop in. */
+  .atm-trust-viewport::before,
+  .atm-trust-viewport::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: clamp(28px, 7vw, 96px);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .atm-trust-viewport::before {
+    left: 0;
+    background: linear-gradient(to right, var(--atm-bg-2), transparent);
+  }
+
+  .atm-trust-viewport::after {
+    right: 0;
+    background: linear-gradient(to left, var(--atm-bg-2), transparent);
+  }
+
+  .atm-trust-track {
+    display: flex;
+    width: max-content;
+    animation: atm-trust-scroll 46s linear infinite;
+  }
+
+  .atm-trust-viewport:hover .atm-trust-track,
+  .atm-trust-viewport:focus-within .atm-trust-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes atm-trust-scroll {
+    from {
+      transform: translate3d(0, 0, 0);
+    }
+    to {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+
+  .atm-trust-set {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .atm-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px clamp(20px, 3vw, 38px);
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--atm-ink-dim);
+    border-right: 1px solid var(--atm-line);
+  }
+
+  .atm-trust-icon {
+    display: flex;
+    font-size: 17px;
+    color: var(--atm-accent);
+  }
+
+  .atm-trust-item sub {
+    font-size: 0.75em;
+    vertical-align: baseline;
+  }
+
+  /* Static, scrollable, duplicate hidden. */
+  @media (prefers-reduced-motion: reduce) {
+    .atm-trust-viewport {
+      overflow-x: auto;
+      scrollbar-width: thin;
+    }
+
+    .atm-trust-track {
+      animation: none;
+    }
+
+    .atm-trust-set[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Atramenti - Trust Bar",
+  "tag": "div",
+  "class": "atm-trust-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Atramenti - Trust Bar"
+    }
+  ]
+}
+{% endschema %}

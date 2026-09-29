@@ -1,0 +1,174 @@
+{%- comment -%}
+  Newsletter. Im Theme läuft die Anmeldung über Shopifys eigenes Kundenformular
+  — anders als im Next.js-Projekt braucht es hier keine Storefront-API und kein
+  Wegwerf-Passwort. Shopify legt den Kontakt mit Marketing-Einwilligung an.
+{%- endcomment -%}
+
+<div class="atr-scope atr-nl">
+  <div class="atr-container">
+    <div class="atr-nl__inner">
+      <h2 class="atr-nl__heading">{{ section.settings.heading }}</h2>
+
+      {%- form 'customer', class: 'atr-nl__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        {%- if form.posted_successfully? -%}
+          <p class="atr-nl__success" role="status">{{ section.settings.success_text }}</p>
+        {%- else -%}
+          <div class="atr-nl__field">
+            <label class="atr-visually-hidden" for="atr-nl-email">E-Mail-Adresse</label>
+            <input
+              id="atr-nl-email"
+              class="atr-nl__input"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              autocomplete="email"
+              placeholder="{{ section.settings.placeholder }}"
+              required
+            >
+          </div>
+
+          <button type="submit" class="atr-btn atr-btn--solid atr-nl__submit">
+            {{ section.settings.button_label }}
+          </button>
+        {%- endif -%}
+
+        {%- if form.errors -%}
+          <p class="atr-nl__error" role="alert">
+            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+          </p>
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if section.settings.privacy != blank -%}
+        <div class="atr-nl__privacy">{{ section.settings.privacy }}</div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-nl {
+    border-top: 1px solid var(--atr-mist);
+    padding-block: 64px;
+  }
+
+  .atr-nl__inner {
+    max-width: 36rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+
+  .atr-nl__heading {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-display);
+  }
+
+  .atr-nl__form {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .atr-nl__field {
+    flex: 1 1 200px;
+    text-align: left;
+  }
+
+  .atr-nl__input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--atr-mist);
+    border-radius: 0;
+    padding-bottom: 8px;
+    font-family: var(--atr-font);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-ink);
+  }
+
+  .atr-nl__input:focus {
+    outline: none;
+    border-bottom-color: var(--atr-ink);
+  }
+
+  .atr-scope .atr-nl__submit {
+    flex: 0 0 auto;
+  }
+
+  .atr-nl__success {
+    margin: 0;
+    flex: 1 0 100%;
+    font-size: 14px;
+  }
+
+  .atr-nl__error {
+    margin: 0;
+    flex: 1 0 100%;
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  .atr-nl__privacy {
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--atr-muted);
+  }
+
+  .atr-nl__privacy p {
+    margin: 0;
+  }
+
+  .atr-nl__privacy a {
+    color: inherit;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-nl {
+      padding-block: 80px;
+    }
+
+    .atr-nl__heading {
+      font-size: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Newsletter",
+  "tag": "section",
+  "class": "atr-section-newsletter",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Let's stay in touch" },
+    { "type": "text", "id": "placeholder", "label": "Platzhalter", "default": "E-Mail-Adresse" },
+    { "type": "text", "id": "button_label", "label": "Button-Text", "default": "Abonnieren" },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Erfolgstext",
+      "default": "Danke – du bist dabei."
+    },
+    {
+      "type": "richtext",
+      "id": "privacy",
+      "label": "Datenschutzhinweis",
+      "default": "<p>Mit der Anmeldung stimmst du zu, dass wir dir Neuigkeiten per E-Mail schicken. Abmeldung jederzeit über den Link in jeder Mail.</p>"
+    }
+  ],
+  "presets": [{ "name": "ATR Newsletter" }]
+}
+{% endschema %}

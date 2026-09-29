@@ -1,0 +1,350 @@
+{%- liquid
+  assign rating = section.settings.rating
+  assign filled = rating | round
+-%}
+
+<div class="atr-scope atr-ft">
+  <div class="atr-container">
+    <div class="atr-ft__groups">
+      {%- for block in section.blocks -%}
+        {%- assign list = linklists[block.settings.menu] -%}
+        <div class="atr-ft__group" {{ block.shopify_attributes }}>
+          <button
+            type="button"
+            class="atr-ft__toggle"
+            aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+            aria-controls="atr-ft-{{ block.id }}"
+            data-atr-ft-toggle
+          >
+            <span class="atr-ft__title">{{ block.settings.title | default: list.title }}</span>
+            <svg class="atr-ft__chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true" focusable="false">
+              <path d="M1 1.5 6 6.5l5-5" stroke="currentColor" stroke-width="1"></path>
+            </svg>
+          </button>
+
+          <ul
+            class="atr-ft__links{% if forloop.first %} is-open{% endif %}"
+            id="atr-ft-{{ block.id }}"
+            data-atr-ft-panel
+          >
+            {%- for link in list.links -%}
+              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Bewertungen {%- endcomment -%}
+    {%- if section.settings.show_rating -%}
+      <div class="atr-ft__rating">
+        <div class="atr-ft__stars" aria-hidden="true">
+          {%- for i in (1..5) -%}
+            <svg width="14" height="14" viewBox="0 0 14 14" focusable="false">
+              <path
+                d="M7 1.2l1.75 3.9 4.05.42-3.03 2.8.86 4.16L7 10.4l-3.63 2.08.86-4.16L1.2 5.52l4.05-.42L7 1.2Z"
+                fill="{% if i <= filled %}currentColor{% else %}none{% endif %}"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          {%- endfor -%}
+        </div>
+        <p class="atr-ft__ratingtext">
+          {{ rating }} von 5 aus {{ section.settings.review_count }} Bewertungen
+        </p>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} Zertifikats-Platzhalter {%- endcomment -%}
+    <ul class="atr-ft__badges">
+      {%- for i in (1..5) -%}
+        <li class="atr-ft__badge">Badge {{ i }}</li>
+      {%- endfor -%}
+    </ul>
+
+    <hr class="atr-hr atr-ft__rule">
+
+    <div class="atr-ft__bottom">
+      <p class="atr-ft__copy">
+        &copy; {{ 'now' | date: '%Y' }} {{ section.settings.brand | default: shop.name }}. Alle Rechte vorbehalten.
+      </p>
+
+      <ul class="atr-ft__pay">
+        {%- assign methods = section.settings.payment_methods | split: ',' -%}
+        {%- for method in methods -%}
+          <li>{{ method | strip }}</li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-ft {
+    border-top: 1px solid var(--atr-mist);
+    background: var(--atr-paper);
+    padding-top: 48px;
+  }
+
+  .atr-ft__group {
+    border-bottom: 1px solid var(--atr-mist);
+  }
+
+  .atr-ft__toggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    color: var(--atr-ink);
+  }
+
+  .atr-ft__title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-wide2);
+    color: var(--atr-muted);
+  }
+
+  .atr-ft__chevron {
+    flex: 0 0 auto;
+    transition: transform 0.3s ease;
+  }
+
+  .atr-ft__toggle[aria-expanded='true'] .atr-ft__chevron {
+    transform: rotate(180deg);
+  }
+
+  .atr-ft__links {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 20px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .atr-ft__links.is-open {
+    display: flex;
+  }
+
+  .atr-ft__links a {
+    font-size: 14px;
+    text-decoration: none;
+    color: var(--atr-ink);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s ease;
+  }
+
+  .atr-ft__links a:hover {
+    border-bottom-color: var(--atr-ink);
+  }
+
+  .atr-ft__rating {
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .atr-ft__stars {
+    display: flex;
+    gap: 4px;
+    color: var(--atr-ink);
+  }
+
+  .atr-ft__ratingtext {
+    margin: 0;
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  .atr-ft__badges {
+    list-style: none;
+    margin: 40px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .atr-scope .atr-ft__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 1px solid var(--atr-mist);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+    text-align: center;
+  }
+
+  .atr-ft__rule {
+    margin-top: 48px;
+  }
+
+  .atr-ft__bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding-block: 32px;
+  }
+
+  .atr-ft__copy {
+    margin: 0;
+    font-size: 12px;
+    color: var(--atr-muted);
+  }
+
+  .atr-ft__pay {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .atr-ft__pay li {
+    border: 1px solid var(--atr-mist);
+    padding: 6px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-widest);
+    color: var(--atr-muted);
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-ft {
+      padding-top: 80px;
+    }
+
+    .atr-ft__groups {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    .atr-ft__group {
+      border-bottom: 0;
+    }
+
+    .atr-ft__toggle {
+      padding: 0;
+      pointer-events: none;
+    }
+
+    .atr-ft__chevron {
+      display: none;
+    }
+
+    /* Ab Desktop sind alle Spalten offen, unabhaengig vom Akkordeon-Zustand. */
+    .atr-ft__links {
+      display: flex;
+      margin-top: 16px;
+      padding-bottom: 0;
+    }
+
+    .atr-ft__bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+<script>
+  (function () {
+    var toggles = document.querySelectorAll('[data-atr-ft-toggle]');
+    if (!toggles.length) return;
+
+    toggles.forEach(function (toggle) {
+      toggle.addEventListener('click', function () {
+        var panel = document.getElementById(toggle.getAttribute('aria-controls'));
+        var wasOpen = toggle.getAttribute('aria-expanded') === 'true';
+
+        // Immer nur eine Gruppe offen.
+        toggles.forEach(function (other) {
+          other.setAttribute('aria-expanded', 'false');
+          var otherPanel = document.getElementById(other.getAttribute('aria-controls'));
+          if (otherPanel) otherPanel.classList.remove('is-open');
+        });
+
+        if (!wasOpen && panel) {
+          toggle.setAttribute('aria-expanded', 'true');
+          panel.classList.add('is-open');
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "ATR Footer",
+  "tag": "footer",
+  "class": "atr-section-footer",
+  "settings": [
+    { "type": "text", "id": "brand", "label": "Markenname", "default": "Atramenti" },
+    { "type": "checkbox", "id": "show_rating", "label": "Bewertungszeile zeigen", "default": true },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Bewertung",
+      "default": "4,8"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Anzahl Bewertungen",
+      "default": "214"
+    },
+    {
+      "type": "text",
+      "id": "payment_methods",
+      "label": "Zahlungsarten",
+      "info": "Komma-getrennt. Bewusst Text statt nachgebauter Markenlogos.",
+      "default": "Visa, Mastercard, PayPal, Klarna, Apple Pay"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Gruppe",
+      "limit": 5,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Shop" },
+        { "type": "link_list", "id": "menu", "label": "Menü", "default": "footer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Footer",
+      "blocks": [
+        { "type": "menu", "settings": { "title": "Shop" } },
+        { "type": "menu", "settings": { "title": "Erlebnisse" } },
+        { "type": "menu", "settings": { "title": "Information" } },
+        { "type": "menu", "settings": { "title": "Kontakt" } },
+        { "type": "menu", "settings": { "title": "Legal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

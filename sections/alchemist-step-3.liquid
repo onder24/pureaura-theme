@@ -1,0 +1,825 @@
+<section id="s3-root" style="padding:0;width:100%;max-width:100vw;">
+
+<!-- ══════════════════════════════════
+     STICKY HEADER
+══════════════════════════════════ -->
+<div class="s3-hd" id="s3-monitor">
+  <div class="s3-hd-inner">
+
+    <div class="s3-hd-row">
+      <!-- Left: set label -->
+      <div class="s3-hd-l">
+        <span class="s3-set-badge" id="s3-set-badge">SET 1</span>
+        <span class="s3-hd-l-sub">Ölauswahl</span>
+      </div>
+
+      <!-- Center: 9 dots -->
+      <div class="s3-hd-dots" id="s3-mon-dots"></div>
+
+      <!-- Right: counter -->
+      <div class="s3-hd-r">
+        <span id="s3-total" class="s3-hd-cnum">0</span><span class="s3-hd-cden">/9</span>
+      </div>
+    </div>
+
+    <div class="s3-chips-row" id="s3-selected-row">
+      <span class="s3-empty-hint">Wähle deine ersten Essenzen ↓</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     FILTER TABS
+══════════════════════════════════ -->
+<div class="s3-filter-wrap">
+  <div class="s3-filter-scroll" id="s3-filters">
+    <button class="s3-filter-btn active" data-cat="all"          onclick="s3Filter('all',this)"><span class="s3-f-all">◈</span> Alle</button>
+    <button class="s3-filter-btn"        data-cat="orientalisch" onclick="s3Filter('orientalisch',this)"><span class="s3-f-dot" style="background:#c8922a"></span>☽ Oriental</button>
+    <button class="s3-filter-btn"        data-cat="holzig"       onclick="s3Filter('holzig',this)"><span class="s3-f-dot" style="background:#b87a40"></span>⬡ Holzig</button>
+    <button class="s3-filter-btn"        data-cat="exotisch"     onclick="s3Filter('exotisch',this)"><span class="s3-f-dot" style="background:#8a5a9a"></span>☉ Exotisch</button>
+    <button class="s3-filter-btn"        data-cat="frisch"       onclick="s3Filter('frisch',this)"><span class="s3-f-dot" style="background:#5a9ab5"></span>△ Frisch</button>
+    <button class="s3-filter-btn"        data-cat="zitrisch"     onclick="s3Filter('zitrisch',this)"><span class="s3-f-dot" style="background:#c8b830"></span>◑ Zitrisch</button>
+    <button class="s3-filter-btn"        data-cat="blumig"       onclick="s3Filter('blumig',this)"><span class="s3-f-dot" style="background:#c8608a"></span>✦ Blumig</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     OIL GRID
+══════════════════════════════════ -->
+<div class="s3-grid" id="s3-grid"></div>
+<div class="s3-empty-state" id="s3-empty" style="display:none">
+  <div class="s3-empty-icon">◈</div>
+  <p>Keine Öle in dieser Kategorie</p>
+</div>
+
+<!-- FOOTER -->
+<footer class="s3-footer-bar">
+  <button class="s3-finish-btn" id="s3-finish-btn" disabled onclick="window.saveAndNextSet()">
+    <span id="s3-finish-label">SET 1 SPEICHERN</span>
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M9 1L13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+</footer>
+
+</section>
+
+<style>
+:root {
+  --acc:      #4a9e74;
+  --acc-dim:  rgba(74,158,116,0.12);
+  --acc-glow: rgba(74,158,116,0.35);
+  --bg:       #080e0a;
+}
+
+/* ══ STICKY HEADER ══ */
+.s3-hd {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(5,11,7,0.85);
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  border-bottom: 1px solid rgba(74,158,116,0.12);
+  overflow: hidden;
+}
+/* Green accent edge left */
+.s3-hd::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+  background: linear-gradient(to bottom, var(--acc) 0%, rgba(74,158,116,0.15) 70%, transparent 100%);
+}
+/* Ambient glow top-left */
+.s3-hd::after {
+  content: '';
+  position: absolute; top: -30px; left: -30px;
+  width: 200px; height: 130px;
+  background: radial-gradient(ellipse, rgba(74,158,116,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.s3-hd-inner {
+  max-width: 460px; margin: 0 auto;
+  padding: 14px 18px 12px;
+  position: relative;
+}
+
+/* One-row layout */
+.s3-hd-row {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+/* Left: SET label */
+.s3-hd-l { display: flex; flex-direction: column; gap: 2px; min-width: 54px; }
+.s3-set-badge {
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px; font-weight: 600; letter-spacing: 2px;
+  color: var(--acc); text-transform: uppercase;
+}
+.s3-hd-l-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px; font-weight: 300; font-style: italic;
+  color: rgba(168,191,178,0.4); letter-spacing: 1px;
+}
+
+/* Center: dots */
+.s3-hd-dots {
+  display: flex; align-items: center; gap: 7px; flex: 1; justify-content: center;
+}
+.s3-drop-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  border: 1px solid rgba(74,158,116,0.2);
+  background: transparent;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.s3-drop-dot.filled {
+  background: var(--acc);
+  border-color: var(--acc);
+  box-shadow: 0 0 7px var(--acc-glow);
+}
+.s3-drop-dot.filled.new { animation: dotPop 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes dotPop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Right: counter */
+.s3-hd-r { text-align: right; min-width: 54px; }
+.s3-hd-cnum {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px; font-weight: 300; font-style: italic;
+  color: var(--acc); line-height: 0.95; letter-spacing: -1px;
+}
+.s3-hd-cden {
+  font-family: 'Barlow', sans-serif;
+  font-size: 11px; color: rgba(74,158,116,0.3);
+  vertical-align: top; display: inline-block; margin-top: 5px;
+}
+
+/* Chips row */
+.s3-chips-row {
+  display: flex; gap: 6px; overflow-x: auto;
+  scrollbar-width: none; padding-bottom: 2px;
+  min-height: 28px; align-items: center;
+}
+.s3-chips-row::-webkit-scrollbar { display: none; }
+.s3-empty-hint {
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px; color: rgba(168,191,178,0.25);
+  letter-spacing: 1px;
+}
+.s3-chip {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(74,158,116,0.08);
+  border: 1px solid rgba(74,158,116,0.25);
+  border-radius: 20px; padding: 4px 10px 4px 7px;
+  white-space: nowrap; flex-shrink: 0;
+  animation: chipFly 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+@keyframes chipFly {
+  from { opacity: 0; transform: translateX(-12px) scale(0.85); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+.s3-chip-dot  { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.s3-chip-name { font-family: 'Barlow', sans-serif; font-size: 8px; color: rgba(74,158,116,0.85); }
+.s3-chip-qty  { font-size: 8px; color: rgba(74,158,116,0.5); }
+
+/* Header hint line */
+.s3-hd-rule {
+  font-family: 'Barlow', sans-serif;
+  font-size: 8.5px; letter-spacing: 1px;
+  color: rgba(168,191,178,0.3);
+  text-align: center; margin-top: 10px;
+  line-height: 1.4;
+}
+.s3-hd-rule strong { color: rgba(74,158,116,0.7); font-weight: 400; }
+
+/* Filter category dot */
+.s3-f-dot {
+  display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  vertical-align: middle; margin-right: 3px; opacity: 0.8;
+  flex-shrink: 0;
+}
+.s3-f-all { font-size: 11px; margin-right: 2px; opacity: 0.6; }
+
+/* Image copy protection */
+.s3-card-img {
+  -webkit-user-drag: none;
+  user-select: none; -webkit-user-select: none;
+  pointer-events: none;
+}
+.s3-card { user-select: none; -webkit-user-select: none; }
+
+/* ══ INFO OVERLAY — slide-up panel ══ */
+.s3-card-info {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 74%;
+  background: rgba(3,7,4,0.97);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  z-index: 15;
+  transform: translateY(100%);
+  transition: transform 0.44s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+  display: flex; flex-direction: column;
+}
+.s3-card-info.show {
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Colored stripe at top — set via inline style */
+.s3-ov-stripe {
+  height: 3px; flex-shrink: 0;
+  opacity: 0.75;
+}
+
+/* Close button */
+.s3-info-close {
+  position: absolute; top: 10px; right: 10px;
+  width: 22px; height: 22px;
+  background: none; border: none;
+  color: rgba(255,255,255,0.3); font-size: 14px;
+  cursor: pointer; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Body */
+.s3-ov-body {
+  padding: 12px 14px 16px;
+  display: flex; flex-direction: column;
+  flex: 1; overflow: hidden;
+}
+
+.s3-ov-eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 7px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(74,158,116,0.55); margin-bottom: 6px;
+}
+
+.s3-ov-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px; font-weight: 300; font-style: italic;
+  color: #edf3ef; line-height: 1; letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+/* Perfume list — no boxes, just clean lines */
+.s3-ov-list {
+  display: flex; flex-direction: column;
+  gap: 0; flex: 1;
+}
+.s3-ov-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid rgba(168,191,178,0.07);
+}
+.s3-ov-item:first-child { border-top: none; }
+.s3-ov-n {
+  font-family: 'Barlow', sans-serif;
+  font-size: 7px; letter-spacing: 1px;
+  color: rgba(74,158,116,0.4); padding-top: 2px; flex-shrink: 0;
+  width: 16px;
+}
+.s3-ov-pname {
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px; font-weight: 400;
+  color: #c8d8ce; line-height: 1.2;
+}
+.s3-ov-pbrand {
+  font-family: 'Barlow', sans-serif;
+  font-size: 7.5px; color: rgba(168,191,178,0.3);
+  letter-spacing: 0.5px; margin-top: 2px;
+}
+
+/* ══ FILTER TABS ══ */
+.s3-filter-wrap {
+  position: sticky; top: 100px; z-index: 150;
+  background: rgba(6,10,7,0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(168,191,178,0.05);
+  padding: 12px 0;
+}
+.s3-filter-scroll {
+  display: flex; gap: 8px; overflow-x: auto;
+  scrollbar-width: none; padding: 0 16px;
+}
+.s3-filter-scroll::-webkit-scrollbar { display: none; }
+.s3-filter-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(12,22,16,0.7);
+  border: 1px solid rgba(168,191,178,0.1);
+  border-radius: 999px; padding: 9px 18px;
+  white-space: nowrap;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px; font-weight: 400;
+  color: rgba(168,191,178,0.5);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.s3-filter-btn:hover  { border-color: rgba(74,158,116,0.3); color: rgba(74,158,116,0.8); }
+.s3-filter-btn.active {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(74,158,116,0.3);
+  font-weight: 500;
+}
+
+/* ══ OIL GRID — GALLERY MODE ══ */
+.s3-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 14px 12px 140px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* ══ OIL CARD ══ */
+.s3-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 2 / 3;
+  cursor: pointer;
+  background: #0a1209;
+  border: 2px solid rgba(168,191,178,0.07);
+  transition: border-color 0.35s, box-shadow 0.35s, transform 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  animation: cardReveal 0.45s cubic-bezier(0.16,1,0.3,1) both;
+}
+@keyframes cardReveal {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.s3-card:active { transform: scale(0.96); }
+
+.s3-card.selected {
+  border-color: var(--acc);
+  box-shadow: 0 0 0 1px rgba(74,158,116,0.2), 0 12px 40px rgba(0,0,0,0.6), 0 0 28px rgba(74,158,116,0.25);
+}
+
+/* Image */
+.s3-card-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.s3-card:hover .s3-card-img { transform: scale(1.05); }
+.s3-card-ph {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px; color: rgba(74,158,116,0.15);
+}
+
+/* Bottom gradient */
+.s3-card-grad {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 65%;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.92) 0%,
+    rgba(0,0,0,0.5) 40%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* Category tag — top left */
+.s3-card-cat {
+  position: absolute; top: 10px; left: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 7px; letter-spacing: 1.5px;
+  color: rgba(255,255,255,0.55);
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 20px; padding: 4px 10px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Count badge — top right */
+.s3-count-badge {
+  position: absolute; top: 10px; right: 10px;
+  min-width: 30px; height: 30px;
+  border-radius: 999px; padding: 0 8px;
+  background: var(--acc);
+  color: #fff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px; font-weight: 700;
+  display: none;
+  align-items: center; justify-content: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  z-index: 2;
+  animation: badgePop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes badgePop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.s3-card.has-drops .s3-count-badge { display: flex; }
+
+/* Oil name — overlaid, bottom */
+.s3-card-name {
+  position: absolute;
+  bottom: 58px; left: 12px; right: 56px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px; font-weight: 300;
+  color: #fff; line-height: 1.15;
+  letter-spacing: 0.5px;
+  pointer-events: none;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.6);
+}
+
+/* Note / desc — below name */
+.s3-card-note {
+  position: absolute;
+  bottom: 46px; left: 12px; right: 12px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px; color: rgba(255,255,255,0.45);
+  line-height: 1.4; letter-spacing: 0.3px;
+  pointer-events: none;
+  display: none; /* shown on selected */
+}
+.s3-card.selected .s3-card-note { display: block; }
+
+/* Controls row — bottom of card */
+.s3-card-controls {
+  position: absolute;
+  bottom: 10px; left: 10px; right: 10px;
+  display: flex; gap: 8px; align-items: center;
+}
+
+.s3-btn {
+  height: 38px;
+  border-radius: 999px;
+  border: none; cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+  font-size: 22px; font-weight: 300;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.s3-btn:not(:disabled):active { transform: scale(0.9); }
+
+.s3-btn-minus {
+  width: 38px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255,255,255,0.75);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: none;
+}
+.s3-card.has-drops .s3-btn-minus { display: flex; }
+.s3-btn-minus:disabled { opacity: 0.3; pointer-events: none; }
+
+.s3-btn-plus {
+  flex: 1;
+  background: var(--acc);
+  color: #fff; font-weight: 500;
+  font-size: 13px; letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 0 16px rgba(74,158,116,0.2);
+}
+.s3-btn-plus:disabled {
+  background: rgba(74,158,116,0.2);
+  color: rgba(74,158,116,0.4);
+  box-shadow: none;
+  pointer-events: none;
+}
+.s3-card.has-drops .s3-btn-plus {
+  flex: 1;
+  font-size: 22px;
+}
+
+/* Green selection line at top */
+.s3-card::after {
+  content: '';
+  position: absolute; top: 0; left: 12%; right: 12%; height: 2px;
+  background: linear-gradient(to right, transparent, var(--acc), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+  border-radius: 2px;
+}
+.s3-card.selected::after { opacity: 1; }
+
+/* Empty */
+.s3-empty-state {
+  text-align: center; padding: 60px 20px;
+  font-family: 'Barlow', sans-serif;
+  color: rgba(168,191,178,0.3);
+}
+.s3-empty-icon  { font-size: 40px; margin-bottom: 14px; opacity: 0.2; }
+.s3-empty-state p { font-size: 10px; letter-spacing: 2px; }
+
+/* Footer */
+.s3-footer-bar {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  z-index: 300;
+  display: flex; justify-content: center;
+  background: linear-gradient(to top, #040806 0%, rgba(4,8,6,0.95) 55%, transparent 100%);
+  padding: 16px 16px 28px;
+  pointer-events: none;
+}
+.s3-finish-btn {
+  pointer-events: auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #1a3329, #2f6e4f);
+  border: 1px solid rgba(74,158,116,0.35);
+  color: #e8f0ec;
+  padding: 18px 32px;
+  border-radius: 999px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 3px; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
+  box-shadow: 0 0 24px rgba(74,158,116,0.1);
+  width: calc(100% - 32px); max-width: 460px;
+}
+.s3-finish-btn:not(:disabled):hover {
+  background: linear-gradient(135deg, #2f6e4f, #4a9e74);
+  box-shadow: 0 0 40px rgba(74,158,116,0.25), 0 8px 32px rgba(0,0,0,0.4);
+}
+.s3-finish-btn:not(:disabled):active { transform: scale(0.98); }
+.s3-finish-btn:disabled {
+  background: rgba(12,22,16,0.8);
+  border-color: rgba(168,191,178,0.07);
+  color: rgba(168,191,178,0.2);
+  cursor: not-allowed; box-shadow: none; opacity: 0.7;
+}
+</style>
+
+<script>
+/* ── 21 ÖLDATENBANK ── */
+const S3_OILS = [
+  {id:'VA',name:'Vanille',           cat:'orientalisch',color:'#f5deb3',img:'{{ "oil-vanille.png" | asset_url }}',
+   perf:[{n:'Shalimar',b:'Guerlain'},{n:'Angel',b:'Mugler'},{n:'Hypnotic Poison',b:'Dior'}]},
+  {id:'OR',name:'Schwarze Orchidee', cat:'exotisch',    color:'#4a1a5a',img:'{{ "oil-schwarze-orchidee.png" | asset_url }}',
+   perf:[{n:'Black Orchid',b:'Tom Ford'},{n:'Noir de Noir',b:'Tom Ford'},{n:'Fracas',b:'Robert Piguet'}]},
+  {id:'MS',name:'Meersalz',          cat:'frisch',      color:'#a0d0e0',img:'{{ "oil-meersalz.png" | asset_url }}',
+   perf:[{n:'Acqua di Giò',b:'Armani'},{n:'Light Blue',b:'D&G'},{n:'Bleu de Chanel',b:'Chanel'}]},
+  {id:'AB',name:'Amber',             cat:'orientalisch',color:'#c8922a',img:'{{ "oil-amber.png" | asset_url }}',
+   perf:[{n:'Ambre Nuit',b:'Dior'},{n:'Shalimar',b:'Guerlain'},{n:'Amber Oud',b:'Al Haramain'}]},
+  {id:'AT',name:'African Tonka',     cat:'orientalisch',color:'#6b4423',img:'{{ "oil-african-tonka.png" | asset_url }}',
+   perf:[{n:'La Nuit de l\'Homme',b:'YSL'},{n:'Spicebomb',b:'Viktor & Rolf'},{n:'L\'Homme',b:'YSL'}]},
+  {id:'OU',name:'Oud',               cat:'orientalisch',color:'#5a2010',img:'{{ "oil-oud.png" | asset_url }}',
+   perf:[{n:'Oud Wood',b:'Tom Ford'},{n:'Oud & Bergamot',b:'Jo Malone'},{n:'Backtrack',b:'Byredo'}]},
+  {id:'OL',name:'Olibanum',          cat:'orientalisch',color:'#c8a060',img:'{{ "oil-olibanum.png" | asset_url }}',
+   perf:[{n:'Encens Flamboyant',b:'Annick Goutal'},{n:'Avignon',b:'Comme des Garçons'},{n:'Tam Dao',b:'Diptyque'}]},
+  {id:'WK',name:'White Musk',        cat:'frisch',      color:'#e8e8f0',img:'{{ "oil-white-musk.png" | asset_url }}',
+   perf:[{n:'CK One',b:'Calvin Klein'},{n:'White Musk',b:'The Body Shop'},{n:'Narciso',b:'Narciso Rodriguez'}]},
+  {id:'TL',name:'Tobacco Leaves',    cat:'orientalisch',color:'#7a5030',img:'{{ "oil-tobacco-leaves.png" | asset_url }}',
+   perf:[{n:'Tobacco Vanille',b:'Tom Ford'},{n:'Tuscan Leather',b:'Tom Ford'},{n:'Dzing!',b:'L\'Artisan'}]},
+  {id:'PL',name:'Palo Santo',        cat:'holzig',      color:'#c8a878',img:'{{ "oil-palo-santo.png" | asset_url }}',
+   perf:[{n:'Palo Santo',b:'Byredo'},{n:'Amazonia Wild',b:'L\'Artisan'},{n:'Wood Sage & Sea Salt',b:'Jo Malone'}]},
+  {id:'ZH',name:'Zedernholz',        cat:'holzig',      color:'#b87a40',img:'{{ "oil-zedernholz.png" | asset_url }}',
+   perf:[{n:'Fahrenheit',b:'Dior'},{n:'Grey Flannel',b:'Geoffrey Beene'},{n:'Bleu de Chanel',b:'Chanel'}]},
+  {id:'SP',name:'Schwarzer Pfeffer', cat:'exotisch',    color:'#302010',img:'{{ "oil-schwarzer-pfeffer.png" | asset_url }}',
+   perf:[{n:'Poivre Samarcande',b:'Hermès'},{n:'Noir EDT',b:'Tom Ford'},{n:'Dior Homme',b:'Dior'}]},
+  {id:'PA',name:'Patchouli',         cat:'holzig',      color:'#5a4030',img:'{{ "oil-patchouli.png" | asset_url }}',
+   perf:[{n:'Angel',b:'Mugler'},{n:'Patchouli 24',b:'Le Labo'},{n:'N°19',b:'Chanel'}]},
+  {id:'WA',name:'White Amber',       cat:'orientalisch',color:'#e8d0a0',img:'{{ "oil-white-amber.png" | asset_url }}',
+   perf:[{n:'Gold Woman',b:'Amouage'},{n:'White Amber',b:'The Body Shop'},{n:'Jaipur Bracelet',b:'Boucheron'}]},
+  {id:'OT',name:'Oud & Tobacco',     cat:'orientalisch',color:'#3a1808',img:'{{ "oil-oud-and-tobacco.png" | asset_url }}',
+   perf:[{n:'Tobacco Oud',b:'Tom Ford'},{n:'Arabian Wood',b:'Tom Ford'},{n:'Oud For Greatness',b:'Initio'}]},
+  {id:'RU',name:'Rauch',             cat:'holzig',      color:'#606060',img:'{{ "oil-rauch.png" | asset_url }}',
+   perf:[{n:'Santal 33',b:'Le Labo'},{n:'Wonderwood',b:'Comme des Garçons'},{n:'Hinoki',b:'Comme des Garçons'}]},
+  {id:'KO',name:'Kokosnuss',         cat:'exotisch',    color:'#f0e8d0',img:'{{ "oil-kokosnuss.png" | asset_url }}',
+   perf:[{n:'Monoi Tiare',b:'Comptoir Sud Pacifique'},{n:'Coconut Passion',b:'Bath & Body'},{n:'Island',b:'Michael Kors'}]},
+  {id:'OV',name:'Oriental Vanilla',  cat:'orientalisch',color:'#d4a030',img:'{{ "oil-oriental-vanilla.png" | asset_url }}',
+   perf:[{n:'Opium',b:'YSL'},{n:'Obsession',b:'Calvin Klein'},{n:'Coco',b:'Chanel'}]},
+  {id:'BW',name:'Balsam Wood',       cat:'holzig',      color:'#8a6040',img:'{{ "oil-balsam-wood.png" | asset_url }}',
+   perf:[{n:'Ambre Gris',b:'Hermès'},{n:'Baume du Doge',b:'Lorenzo Villoresi'},{n:'Santal Blush',b:'Tom Ford'}]},
+  {id:'AN',name:'Ananas',            cat:'exotisch',    color:'#f0c830',img:'{{ "oil-ananas.png" | asset_url }}',
+   perf:[{n:'L\'Homme',b:'YSL'},{n:'Polo Red',b:'Ralph Lauren'},{n:'Eros',b:'Versace'}]},
+  {id:'WS',name:'Weißes Sandelholz', cat:'holzig',      color:'#e0c8a0',img:'{{ "oil-weisses-sandelholz.png" | asset_url }}',
+   perf:[{n:'Santal 33',b:'Le Labo'},{n:'Tam Dao',b:'Diptyque'},{n:'Santal Blush',b:'Tom Ford'}]},
+];
+
+const CAT_ICONS = {zitrisch:'◑',holzig:'⬡',blumig:'✦',orientalisch:'☽',frisch:'△',exotisch:'☉'};
+const S3_MAX_TOTAL = 9, S3_MAX_PER = 3;
+let s3ActiveCat = 'all';
+
+/* ── HELPERS ── */
+function s3GetSet() { const s=window.alchemistState; return s?.sets?.[s.currentActiveSet] || {oils:{}}; }
+function s3Total()  { return Object.values(s3GetSet().oils||{}).reduce((a,b)=>a+b,0); }
+function s3Drops(n) { return s3GetSet().oils?.[n]||0; }
+
+/* ── FILTER ── */
+function s3Filter(cat, btn) {
+  s3ActiveCat = cat;
+  document.querySelectorAll('.s3-filter-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  s3RenderGrid();
+}
+
+/* ── INFO OVERLAY TOGGLE (event delegation — reliable on iOS) ── */
+function s3HideInfo(e, id) {
+  e.stopPropagation();
+  const el = document.getElementById('s3info_' + id);
+  if (el) el.classList.remove('show');
+}
+function s3CloseAllInfo() {
+  document.querySelectorAll('.s3-card-info.show').forEach(el => el.classList.remove('show'));
+}
+// Close overlays when tapping outside the grid
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#s3-grid')) s3CloseAllInfo();
+});
+
+/* ── CARD HTML ── */
+function s3CardHTML(oil, idx) {
+  const drops  = s3Drops(oil.name);
+  const hasDrop = drops > 0;
+  const tot    = s3Total();
+  const addDis = drops >= S3_MAX_PER || tot >= S3_MAX_TOTAL;
+
+  const imgEl = oil.img
+    ? `<img class="s3-card-img" src="${oil.img}" alt="${oil.name}" loading="lazy" decoding="async" draggable="false" ondragstart="return false">`
+    : `<div class="s3-card-ph">${CAT_ICONS[oil.cat]||'◈'}</div>`;
+
+  const perfItems = (oil.perf||[]).slice(0,2).map((p, i) =>
+    `<div class="s3-ov-item">
+      <span class="s3-ov-n">0${i+1}</span>
+      <div>
+        <div class="s3-ov-pname">${p.n}</div>
+        <div class="s3-ov-pbrand">${p.b}</div>
+      </div>
+    </div>`
+  ).join('');
+
+  return `<div class="s3-card${hasDrop?' selected has-drops':''}"
+     data-name="${oil.name}" data-color="${oil.color}"
+     style="animation-delay:${idx*.05}s">
+    ${imgEl}
+    <div class="s3-card-grad"></div>
+    <div class="s3-card-cat">${CAT_ICONS[oil.cat]||'◈'} ${oil.cat}</div>
+    <div class="s3-count-badge">${drops||''}</div>
+    <div class="s3-card-name">${oil.name}</div>
+
+    <!-- Info overlay — slides up from bottom -->
+    <div class="s3-card-info" id="s3info_${oil.id}">
+      <div class="s3-ov-stripe" style="background:${oil.color}"></div>
+      <button class="s3-info-close" onclick="s3HideInfo(event,'${oil.id}')">✕</button>
+      <div class="s3-ov-body">
+        <p class="s3-ov-eyebrow">Bekannt aus</p>
+        <h3 class="s3-ov-name">${oil.name}</h3>
+        <div class="s3-ov-list">${perfItems}</div>
+      </div>
+    </div>
+
+    <div class="s3-card-controls">
+      <button class="s3-btn s3-btn-minus" onclick="s3Remove(event,'${oil.name}')"${!hasDrop?' disabled':''}>−</button>
+      <button class="s3-btn s3-btn-plus"  onclick="s3QuickAdd(event,'${oil.name}')"${addDis?' disabled':''}>${hasDrop ? drops+'×' : 'Hinzufügen'}</button>
+    </div>
+  </div>`;
+}
+
+/* ── UPDATE SINGLE CARD (no rebuild) ── */
+function s3UpdateCard(card, oil) {
+  const drops  = s3Drops(oil.name);
+  const hasDrop = drops > 0;
+  const tot    = s3Total();
+  const addDis = drops >= S3_MAX_PER || tot >= S3_MAX_TOTAL;
+
+  card.classList.toggle('selected',  hasDrop);
+  card.classList.toggle('has-drops', hasDrop);
+
+  const badge = card.querySelector('.s3-count-badge');
+  if (badge) badge.textContent = drops || '';
+
+  const minus = card.querySelector('.s3-btn-minus');
+  const plus  = card.querySelector('.s3-btn-plus');
+  if (minus) minus.disabled = !hasDrop;
+  if (plus)  {
+    plus.disabled  = addDis;
+    plus.textContent = hasDrop ? drops+'×' : 'Hinzufügen';
+  }
+}
+
+/* ── RENDER GRID ── */
+function s3RenderGrid(changedOilName) {
+  const grid  = document.getElementById('s3-grid');
+  const empty = document.getElementById('s3-empty');
+  const oils  = S3_OILS.filter(o=>s3ActiveCat==='all'||o.cat===s3ActiveCat);
+  if (!oils.length) { grid.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display = 'none';
+
+  const existing  = grid.querySelectorAll('.s3-card');
+  const sameLayout = existing.length === oils.length &&
+    Array.from(existing).every((el,i) => el.dataset.name === oils[i].name);
+
+  if (sameLayout) {
+    oils.forEach((oil,i) => {
+      if (!changedOilName || oil.name===changedOilName || s3Total()>=S3_MAX_TOTAL || s3Total()===S3_MAX_TOTAL-1) {
+        s3UpdateCard(existing[i], oil);
+      }
+    });
+    return;
+  }
+  grid.innerHTML = oils.map((oil,idx) => s3CardHTML(oil,idx)).join('');
+}
+
+/* ── INTERACTIONS ── */
+function s3QuickAdd(e, name) {
+  e.stopPropagation();
+  const set=s3GetSet(), cur=s3Drops(name), tot=s3Total();
+  if (cur>=S3_MAX_PER||tot>=S3_MAX_TOTAL) {
+    if (window.showToast) showToast(tot>=S3_MAX_TOTAL?'Maximum (9) erreicht':`Max. ${S3_MAX_PER} pro Öl`,'error');
+    return;
+  }
+  set.oils[name] = cur+1;
+  s3RenderGrid(name);
+  s3UpdateMonitor(true);
+}
+
+function s3Remove(e, name) {
+  e.stopPropagation();
+  const set=s3GetSet();
+  if (!set.oils[name]) return;
+  set.oils[name]--;
+  if (set.oils[name]<=0) delete set.oils[name];
+  s3RenderGrid(name);
+  s3UpdateMonitor(false);
+}
+
+/* ── MONITOR UPDATE ── */
+function s3UpdateMonitor(added) {
+  const set=s3GetSet(), tot=s3Total(), st=window.alchemistState;
+
+  const totEl=document.getElementById('s3-total');
+  if (totEl) totEl.innerText=tot;
+
+  const fill=document.getElementById('s3-prog-fill');
+  const glow=document.getElementById('s3-prog-glow');
+  const pct=(tot/S3_MAX_TOTAL)*100;
+  if (fill) fill.style.width=pct+'%';
+  if (glow) { glow.style.opacity=tot>0?'1':'0'; glow.style.right=(100-pct)+'%'; }
+
+  const dots=document.getElementById('s3-mon-dots');
+  if (dots) dots.innerHTML=Array.from({length:S3_MAX_TOTAL},(_,i)=>{
+    const on=i<tot, isNew=added&&i===tot-1;
+    return `<div class="s3-drop-dot${on?' filled':''}${isNew?' new':''}"></div>`;
+  }).join('');
+
+  const row=document.getElementById('s3-selected-row');
+  const keys=Object.keys(set.oils||{});
+  if (row) {
+    if (!keys.length) {
+      row.innerHTML='<span class="s3-empty-hint">Wähle deine ersten Essenzen ↓</span>';
+    } else {
+      row.innerHTML=keys.map(n=>{
+        const o=S3_OILS.find(x=>x.name===n);
+        return `<div class="s3-chip"><div class="s3-chip-dot" style="background:${o?.color||'#4a9e74'}"></div><span class="s3-chip-name">${o?.id||n.substring(0,3)}</span><span class="s3-chip-qty">×${set.oils[n]}</span></div>`;
+      }).join('');
+    }
+  }
+
+  const badge=document.getElementById('s3-set-badge');
+  const fin=document.getElementById('s3-finish-btn');
+  const lbl=document.getElementById('s3-finish-label');
+  if (badge&&st) badge.innerText='SET '+st.currentActiveSet;
+  if (fin)  fin.disabled = tot < 1;
+  if (lbl&&st) lbl.innerText=`SET ${st.currentActiveSet} SPEICHERN`;
+}
+
+/* ── INIT ── */
+function initInventory() {
+  if (!window.alchemistState) window.alchemistState={currentActiveSet:1,totalSets:1,sets:{1:{oils:{}}}};
+  s3ActiveCat='all';
+  document.querySelectorAll('.s3-filter-btn').forEach(b=>b.classList.toggle('active',b.dataset.cat==='all'));
+  s3RenderGrid();
+  s3UpdateMonitor(false);
+
+  // Info overlay — event delegation on grid (single handler, works on iOS)
+  const grid = document.getElementById('s3-grid');
+  if (grid && !grid._tapReady) {
+    grid._tapReady = true;
+    grid.addEventListener('click', function(e) {
+      // Buttons already call stopPropagation, so they never reach here
+      if (e.target.closest('.s3-card-controls')) return;
+      const card = e.target.closest('.s3-card');
+      if (!card) return;
+      const info = card.querySelector('.s3-card-info');
+      if (!info) return;
+      const isOpen = info.classList.contains('show');
+      s3CloseAllInfo();
+      if (!isOpen) info.classList.add('show');
+    });
+  }
+}
+
+initInventory();
+</script>

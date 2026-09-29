@@ -1,0 +1,73 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.header.name",
+  "type": "header",
+  "sections": {
+    "header": {
+      "type": "header",
+      "disabled": true,
+      "custom_css": [
+        "/* Setzt nur die Linien auf Weiß und macht das Innere transparent */.header__icon--cart svg {fill: transparent !important; stroke: #ffffff !important; stroke-width: 1.2px !important;}",
+        " /* Erwischt die einzelnen Pfade im Icon */.header__icon--cart svg path {fill: transparent !important; stroke: #ffffff !important;}"
+      ],
+      "settings": {
+        "logo_position": "middle-left",
+        "mobile_logo_position": "center",
+        "menu": "main-menu",
+        "menu_type_desktop": "drawer",
+        "sticky_header_type": "on-scroll-up",
+        "show_line_separator": false,
+        "color_scheme": "scheme-1",
+        "menu_color_scheme": "scheme-1",
+        "enable_country_selector": true,
+        "enable_language_selector": true,
+        "enable_customer_avatar": true,
+        "margin_bottom": 0,
+        "padding_top": 20,
+        "padding_bottom": 0
+      }
+    },
+    "atr_announcement": {
+      "type": "atr-announcement-bar",
+      "blocks": {
+        "m1": {
+          "type": "message",
+          "settings": {
+            "text": "Beginner-Workshop: nächster Live-Termin im Oktober → Platz sichern",
+            "link": "/pages/workshops"
+          }
+        }
+      },
+      "block_order": [
+        "m1"
+      ],
+      "settings": {
+        "dark": false,
+        "interval": 5
+      }
+    },
+    "atr_header": {
+      "type": "atr-header",
+      "settings": {
+        "logo_text": "ATRAMENTI",
+        "tagline": "EXPERIMENTAL INK PERFUMERY",
+        "menu": "",
+        "search_placeholder": "WONACH SUCHST DU?",
+        "sticky": true
+      }
+    }
+  },
+  "order": [
+    "atr_announcement",
+    "atr_header",
+    "header"
+  ]
+}

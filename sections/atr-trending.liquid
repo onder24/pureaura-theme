@@ -1,0 +1,114 @@
+{%- liquid
+  assign coll = collections[section.settings.collection]
+  assign limit = section.settings.limit
+-%}
+
+<div class="atr-scope atr-section atr-section--hairline">
+  <div class="atr-container">
+    <div class="atr-labelled">
+      <div class="atr-trending__label">
+        <span class="atr-label-vertical">{{ section.settings.label }}</span>
+      </div>
+
+      <div class="atr-labelled__body">
+        <div class="atr-section-head">
+          <div class="atr-stack atr-stack--xs">
+            <h2 class="atr-h-display atr-h2">{{ section.settings.heading }}</h2>
+            {%- if section.settings.subline != blank -%}
+              <p class="atr-subline">{{ section.settings.subline }}</p>
+            {%- endif -%}
+          </div>
+
+          {%- if section.settings.link_label != blank -%}
+            <a href="{{ section.settings.link_url | default: coll.url | default: routes.all_products_collection_url }}" class="atr-textlink">
+              {{ section.settings.link_label }}
+            </a>
+          {%- endif -%}
+        </div>
+
+        {%- if coll.products.size > 0 -%}
+          <div class="atr-rail">
+            {%- for product in coll.products limit: limit -%}
+              {% render 'atr-card-product', product: product %}
+            {%- endfor -%}
+          </div>
+        {%- else -%}
+          <div class="atr-rail">
+            {%- for i in (1..4) -%}
+              <div class="atr-card">
+                <div class="atr-media atr-media--portrait atr-card__media">
+                  {{ 'product-1' | placeholder_svg_tag: '' }}
+                </div>
+                <div class="atr-card__body">
+                  <h3 class="atr-card__name">Duft {{ i }}</h3>
+                  <p class="atr-meta">Kollektion in der Sektion auswählen</p>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-trending__label {
+    flex: 0 0 auto;
+    padding-top: 4px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Trending",
+  "tag": "section",
+  "class": "atr-section-trending",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Vertikales Randlabel",
+      "default": "Trending"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Die meistgelesenen Zeilen"
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Kursive Subline",
+      "default": "Was diesen Monat am häufigsten geschrieben wurde."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Kollektion"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "label": "Anzahl Produkte",
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Textlink",
+      "default": "Alle Düfte"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Textlink-Ziel"
+    }
+  ],
+  "presets": [{ "name": "ATR Trending" }]
+}
+{% endschema %}

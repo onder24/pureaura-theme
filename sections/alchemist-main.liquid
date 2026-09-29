@@ -1,0 +1,385 @@
+{{ 'alchemist-styles.css' | asset_url | stylesheet_tag }}
+
+<style>
+.alch-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  z-index: 200;
+  /* Subtiler Gradient statt solidem Hintergrund — wie auf der Startseite */
+  background: linear-gradient(
+    to bottom,
+    rgba(8,14,10,0.75) 0%,
+    rgba(8,14,10,0.0) 100%
+  );
+}
+.alch-topbar__logo {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--s-100);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+}
+.alch-topbar__logo:hover { color: var(--g-400); }
+.alch-topbar__logo-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--g-400);
+  margin-right: 10px;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(74,158,116,0.5);
+  animation: ledBlink 3s infinite ease-in-out;
+}
+.alch-topbar__nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.alch-topbar__nav a {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--s-400);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.alch-topbar__nav a:hover { color: var(--s-100); }
+@media (max-width: 640px) {
+  .alch-topbar { padding: 16px 20px; }
+  .alch-topbar__nav a { display: none; }
+  .alch-topbar__nav a:last-child { display: block; }
+}
+</style>
+
+<div id="alchemist-app" class="neo-lab-interface" style="padding-top:48px;">
+
+  <!-- TOP NAV -->
+  <header class="alch-topbar">
+    <a href="{{ routes.root_url }}" class="alch-topbar__logo">
+      <span class="alch-topbar__logo-dot"></span>Atramenti
+    </a>
+    <nav class="alch-topbar__nav">
+      <a href="{{ routes.cart_url }}">Warenkorb</a>
+    </nav>
+  </header>
+
+  <!-- AMBIENT PARTICLE (decorative) -->
+  <canvas id="alch-canvas" style="position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.4;"></canvas>
+
+  <!-- STEP PROGRESS PIPS -->
+  <div class="step-progress" id="step-progress">
+    <div class="step-pip active" data-step="1"></div>
+    <div class="step-pip" data-step="2"></div>
+    <div class="step-pip" data-step="3"></div>
+    <div class="step-pip" data-step="4"></div>
+    <div class="step-pip" data-step="5"></div>
+  </div>
+
+  <!-- MENTOR BUBBLE -->
+  <div class="guide-container">
+    <div class="guide-bubble" id="mentor-bubble">
+      <div class="ai-led-container">
+        <div class="ai-core" id="led-indicator"></div>
+      </div>
+      <div>
+        <div class="guide-label">
+          <span>MENTOR_SYSTEM_v4.0</span>
+          <span id="ai-status" class="online">● ONLINE</span>
+        </div>
+        <p id="guide-text">Initialisiere Protokoll...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP PHASES -->
+  <div id="phase-1" class="phase-wrapper" style="display:none;">{% render 'alchemist-step-1' %}</div>
+  <div id="phase-2" class="phase-wrapper" style="display:none;">{% render 'alchemist-step-3' %}</div>
+  <div id="phase-3" class="phase-wrapper" style="display:none;">{% render 'alchemist-step-4' %}</div>
+  <div id="phase-4" class="phase-wrapper" style="display:none;">{% render 'alchemist-step-workshop' %}</div>
+  <div id="phase-5" class="phase-wrapper" style="display:none;">{% render 'alchemist-step-5' %}</div>
+
+</div>
+
+<!-- TOAST -->
+<div class="alch-toast" id="alch-toast"></div>
+
+<script>
+/* ================================================================
+   ALCHEMIST CORE v4.0
+   ================================================================ */
+
+// ── STATE ──
+window.alchemistState = {
+  totalSets: 1,
+  currentStep: 1,
+  currentActiveSet: 1,
+  workshopCount: 0,
+  sets: {
+    1: { vibes:[], oils:{}, vessel:null, label:{ title:"ALCHEMIST", theme:"onyx", symbol:"☉", font:"display", spacing:4 }},
+    2: { vibes:[], oils:{}, vessel:null, label:{ title:"ALCHEMIST", theme:"onyx", symbol:"☉", font:"display", spacing:4 }},
+    3: { vibes:[], oils:{}, vessel:null, label:{ title:"ALCHEMIST", theme:"onyx", symbol:"☉", font:"display", spacing:4 }},
+    4: { vibes:[], oils:{}, vessel:null, label:{ title:"ALCHEMIST", theme:"onyx", symbol:"☉", font:"display", spacing:4 }}
+  }
+};
+
+const MENTOR = {
+  1: "Erlebt etwas gemeinsam – wählt euer Paket.",
+  2: "Wähle 9 Einheiten für deinen Duft — max. 3× pro Öl. Tippe auf ein Bild für Details.",
+  3: "Wählt den Flakon, der eure Geschichte trägt.",
+  4: "Optional: Bucht einen persönlichen Zoom-Workshop mit unserem Parfümeur.",
+  5: "Gebt eurem gemeinsamen Duft einen Namen."
+};
+
+// ── TOAST ──
+function showToast(msg, type = '') {
+  const t = document.getElementById('alch-toast');
+  t.textContent = msg;
+  t.className = 'alch-toast' + (type ? ' ' + type : '');
+  void t.offsetWidth;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+window.showToast = showToast;
+
+// ── TYPEWRITER ──
+function typeWriter(text, id) {
+  const el  = document.getElementById(id);
+  const led = document.getElementById('led-indicator');
+  const bub = document.getElementById('mentor-bubble');
+  if (!el) return;
+  if (led) { led.classList.add('busy'); }
+  if (bub) { bub.classList.add('thinking'); }
+  let i = 0;
+  el.innerHTML = '';
+  clearInterval(window._typeInt);
+  window._typeInt = setInterval(() => {
+    if (i < text.length) { el.innerHTML += text.charAt(i++); }
+    else {
+      clearInterval(window._typeInt);
+      if (led) led.classList.remove('busy');
+      if (bub) bub.classList.remove('thinking');
+    }
+  }, 16);
+}
+
+// ── PROGRESS PIPS ──
+function updatePips(currentStep) {
+  document.querySelectorAll('.step-pip').forEach(pip => {
+    const s = +pip.dataset.step;
+    pip.classList.remove('active', 'done');
+    if (s < currentStep)  pip.classList.add('done');
+    if (s === currentStep) pip.classList.add('active');
+  });
+}
+
+// ── NAVIGATION ──
+function navTo(step, pushHistory) {
+  const state = window.alchemistState;
+  state.currentStep = step;
+
+  // Persist current step so refresh restores it
+  try { sessionStorage.setItem('alch_step', step); } catch(e) {}
+
+  // Push browser history (default: yes, except when called from popstate)
+  if (pushHistory !== false) {
+    history.pushState({ step }, '', '#step-' + step);
+  }
+
+  if (MENTOR[step]) typeWriter(MENTOR[step], 'guide-text');
+  updatePips(step);
+
+  // Hide all phases
+  document.querySelectorAll('.phase-wrapper').forEach(p => {
+    p.style.display = 'none';
+    p.classList.remove('entering');
+  });
+
+  const target = document.getElementById('phase-' + step);
+  if (target) {
+    target.style.display = 'block';
+    // Trigger enter animation
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => target.classList.add('entering'));
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  try {
+    if (step === 2 && typeof initInventory    === 'function') initInventory();
+    if (step === 3 && typeof initVesselStep   === 'function') initVesselStep();
+    if (step === 4 && typeof initWorkshopStep === 'function') initWorkshopStep();
+    if (step === 5 && typeof initLabelStep    === 'function') initLabelStep();
+  } catch(e) { console.error('Init error step ' + step, e); }
+}
+
+// ── BACK BUTTON ──
+window.addEventListener('popstate', function(e) {
+  const step = e.state?.step || 1;
+  navTo(step, false);
+});
+
+// ── INIT — always start at step 1 ──
+sessionStorage.removeItem('alch_step');
+navTo(1, false);
+
+window.showStep = navTo;
+
+// ── CART ──
+async function sendToShopifyCart() {
+  const state = window.alchemistState;
+  const items = [];
+  const variantId = 57044740505945;
+  const workshopVariantId = 57044740505945; // TODO: replace with real workshop variant ID
+
+  for (let i = 1; i <= state.totalSets; i++) {
+    const set = state.sets[i];
+    const oils = Object.entries(set.oils || {}).map(([n,q]) => `${n}(${q})`).join(', ');
+    items.push({
+      id: variantId, quantity: 1,
+      properties: {
+        "Konfiguration": `Set ${i}/${state.totalSets}`,
+        "Flakon":   set.vessel || "Standard",
+        "Duft-Mix": oils || "Custom Blend",
+        "Label":    set.label?.title || "ALCHEMIST",
+        "Stil":     set.label?.theme || "onyx",
+        "Symbol":   set.label?.symbol || "☉"
+      }
+    });
+  }
+
+  // Add workshop sessions if booked
+  const wCount = state.workshopCount || 0;
+  if (wCount > 0) {
+    const dates = state.workshopDates || [];
+    const formatSlot = (key) => {
+      if (!key) return '—';
+      const [iso, h] = key.split('_');
+      const d = new Date(iso);
+      const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+      return `So ${d.getDate()}. ${months[d.getMonth()]} · ${h}:00 Uhr`;
+    };
+    const props = { "Typ": "Zoom Workshop · Parfümeur-Session", "Dauer": "90 Minuten" };
+    if (wCount === 1) {
+      props["Termin"] = formatSlot(dates[0]);
+    } else {
+      props["Termin Person 1"] = formatSlot(dates[0]);
+      props["Termin Person 2"] = formatSlot(dates[1]);
+    }
+    items.push({ id: workshopVariantId, quantity: wCount, properties: props });
+  }
+
+  showToast('Übertrage Daten...', '');
+  try {
+    const res = await fetch(window.Shopify?.routes?.root + 'cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items })
+    });
+    if (res.ok) { window.location.href = '/cart'; }
+    else { showToast('Fehler beim Übertragen. Bitte erneut versuchen.', 'error'); }
+  } catch(e) {
+    console.error(e);
+    showToast('Verbindungsfehler.', 'error');
+  }
+}
+
+// ── SET TRANSITIONS ──
+window.saveAndNextSet = function() {
+  const state = window.alchemistState;
+  if (state.currentActiveSet < state.totalSets) {
+    state.currentActiveSet++;
+    if (typeof initInventory === 'function') initInventory();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    typeWriter(`Gestalte Komposition für Set ${state.currentActiveSet}.`, 'guide-text');
+    showToast(`Set ${state.currentActiveSet - 1} gespeichert ✓`, 'success');
+  } else {
+    navTo(3);
+  }
+};
+
+window.confirmLabel = function() {
+  const state   = window.alchemistState;
+  const current = state.currentActiveSet;
+  const title   = document.getElementById('display-title');
+  const label   = document.getElementById('physical-label');
+  const symbol  = document.getElementById('label-symbol');
+
+  state.sets[current].label = {
+    title:   title?.innerText || "ALCHEMIST",
+    theme:   label?.classList.contains('theme-onyx') ? 'onyx' : 'alabaster',
+    symbol:  symbol?.innerText || "☉"
+  };
+
+  if (current < state.totalSets) {
+    state.currentActiveSet++;
+    showToast(`Set ${current} finalisiert ✓`, 'success');
+    if (document.getElementById('label-set-num-btn'))
+      document.getElementById('label-set-num-btn').innerText = state.currentActiveSet;
+    if (document.getElementById('label-input'))
+      document.getElementById('label-input').value = '';
+    if (title) title.innerText = "ALCHEMIST";
+    typeWriter(`Gestalte Etikett für Set ${state.currentActiveSet}.`, 'guide-text');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    sendToShopifyCart();
+  }
+};
+
+// ── AMBIENT PARTICLES ──
+(function() {
+  const canvas = document.getElementById('alch-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function spawn() {
+    return {
+      x: Math.random() * W,
+      y: H + 10,
+      r: Math.random() * 1.5 + 0.5,
+      vy: -(Math.random() * 0.4 + 0.15),
+      vx: (Math.random() - 0.5) * 0.2,
+      o: Math.random() * 0.35 + 0.05,
+      life: 0,
+      maxLife: Math.random() * 300 + 200
+    };
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    if (particles.length < 25) particles.push(spawn());
+    particles = particles.filter(p => p.life < p.maxLife);
+    particles.forEach(p => {
+      p.life++; p.y += p.vy; p.x += p.vx;
+      const fade = p.life < 60 ? p.life / 60 : 1 - (p.life - p.maxLife + 60) / 60;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(74,158,116,${p.o * Math.max(0, fade)})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(frame);
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  frame();
+})();
+
+// ── INIT (handled by refresh persistence block above) ──
+</script>

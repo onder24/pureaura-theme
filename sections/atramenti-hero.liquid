@@ -1,0 +1,341 @@
+{% comment %}
+  ATRAMENTI HERO  ·  Forest & Amber
+  Asymmetric split hero. Type left, product render right.
+
+  Notes on what changed and why:
+  - The CTA used to carry padding: 144px 220px, which made it wider than a
+    phone viewport. It is now a normal single-line button.
+  - The old file declared .gate-hero-visual, .ghv-orb, three rotating rings
+    and a bottle SVG in CSS but never rendered the markup, so the hero had
+    no visual at all. It now uses the real flakon-edge render from assets/.
+  - Google Fonts <link> tags moved to layout/theme.liquid as self-hosted
+    @font-face. Nothing is fetched from fonts.googleapis.com any more.
+  - Removed: particle canvas (O(n^2) link pass every frame), fake progress
+    overlay that delayed navigation by ~1s, letter-by-letter headline
+    reveal, scroll cue, rotated vertical label, blinking status dots,
+    neon glows, and four unlabelled decorative icon circles.
+  - The FAQ that used to live in this file is now sections/atramenti-faq.liquid.
+
+  The site header (sections/header.liquid) is disabled in header-group.json,
+  so this nav is the only navigation on the page. Kept and restyled rather
+  than removed, otherwise the homepage would have no nav at all.
+{% endcomment %}
+
+<div class="atm atm-hero-root">
+  <header class="atm-nav-bar">
+    <div class="atm-nav-inner">
+      <a href="{{ routes.root_url }}" class="atm-nav-logo">Atramenti</a>
+
+      <nav class="atm-nav-links" aria-label="Hauptnavigation">
+        <a href="/pages/kurs-buchen">Workshop</a>
+        <a href="/pages/contact">Kontakt</a>
+        <a href="{{ routes.cart_url }}" class="atm-nav-cart">
+          Warenkorb{% if cart.item_count > 0 %} ({{ cart.item_count }}){% endif %}
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="atm-hero">
+    <div class="atm-hero-grid atm-wrap">
+      <div class="atm-hero-copy">
+        <p class="atm-eyebrow atm-reveal">Dein persönlicher Duft</p>
+
+        <h1 class="atm-display atm-h1 atm-hero-title atm-reveal" data-atm-delay="80">
+          Kreiere deinen
+          <strong>Signature-Duft.</strong>
+        </h1>
+
+        <p class="atm-body atm-hero-sub atm-reveal" data-atm-delay="160">
+          Solo, zu zweit oder in der Gruppe. Erschaffe ein Parfum, das nur dir gehört.
+        </p>
+
+        <div class="atm-hero-actions atm-reveal" data-atm-delay="240">
+          <a href="/pages/konfigurator" class="atm-btn atm-btn--primary">
+            Labor betreten
+            {% render 'atm-icon', name: 'arrow-right' %}
+          </a>
+
+          <a href="#so-entsteht-dein-duft" class="atm-btn atm-btn--ghost">
+            So funktioniert es
+          </a>
+        </div>
+
+        {% comment %}
+          Resume link. Only ever shown by JS when a saved configurator
+          session actually exists, so it is real state, not decoration.
+        {% endcomment %}
+        <a href="/pages/konfigurator" class="atm-hero-resume" id="atm-hero-resume" hidden>
+          <span id="atm-hero-resume-text">Session fortfahren</span>
+          {% render 'atm-icon', name: 'arrow-right' %}
+        </a>
+      </div>
+
+      <div class="atm-hero-visual atm-reveal" data-atm-delay="120">
+        <img
+          src="{{ 'flakon-edge.png' | asset_img_url: '620x' }}"
+          srcset="
+            {{ 'flakon-edge.png' | asset_img_url: '420x' }} 420w,
+            {{ 'flakon-edge.png' | asset_img_url: '620x' }} 620w,
+            {{ 'flakon-edge.png' | asset_img_url: '940x' }} 940w
+          "
+          sizes="(min-width: 1024px) 44vw, 78vw"
+          width="941"
+          height="1136"
+          alt="Atramenti Flakon mit individuell gemischtem Parfum"
+          class="atm-hero-img"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </div>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* ── Navigation. One line at desktop, height capped at 72px. ── */
+  .atm-nav-bar {
+    background: var(--atm-bg);
+    border-bottom: 1px solid var(--atm-line);
+  }
+
+  .atm-nav-inner {
+    max-width: var(--atm-max);
+    margin-inline: auto;
+    padding: 0 var(--atm-gutter);
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .atm-nav-logo {
+    font-family: var(--atm-display);
+    font-weight: 800;
+    font-size: 19px;
+    letter-spacing: -0.01em;
+    color: var(--atm-ink);
+    text-decoration: none;
+  }
+
+  .atm-nav-logo:hover {
+    color: var(--atm-accent);
+  }
+
+  .atm-nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2.4vw, 34px);
+  }
+
+  .atm-nav-links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--atm-ink-dim);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.25s var(--atm-ease);
+  }
+
+  .atm-nav-links a:hover {
+    color: var(--atm-ink);
+  }
+
+  .atm-nav-cart {
+    color: var(--atm-ink) !important;
+  }
+
+  .atm-nav-cart:hover {
+    color: var(--atm-accent) !important;
+  }
+
+  /* ── Hero ── */
+  .atm-hero {
+    background: var(--atm-bg);
+    padding-block: clamp(48px, 7vw, 96px) clamp(56px, 8vw, 104px);
+  }
+
+  .atm-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(40px, 6vw, 64px);
+    align-items: center;
+  }
+
+  .atm-hero-title {
+    margin: 18px 0 0;
+  }
+
+  .atm-hero-sub {
+    margin: 22px 0 0;
+    max-width: 34ch;
+    color: var(--atm-ink-dim);
+  }
+
+  .atm-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 38px;
+  }
+
+  .atm-hero-resume {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--atm-accent);
+    text-decoration: none;
+  }
+
+  .atm-hero-resume.is-visible {
+    display: inline-flex;
+  }
+
+  .atm-hero-resume:hover {
+    color: var(--atm-accent-hi);
+  }
+
+  .atm-hero-resume .atm-icon {
+    font-size: 14px;
+  }
+
+  /* Visual. The radial is a soft background tint for depth, not an
+     outer glow on the element itself. */
+  .atm-hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .atm-hero-visual::before {
+    content: '';
+    position: absolute;
+    inset: 4% 0 4% 0;
+    background: radial-gradient(
+      ellipse at 50% 45%,
+      var(--atm-accent-soft) 0%,
+      rgba(196, 137, 63, 0.05) 42%,
+      transparent 72%
+    );
+    pointer-events: none;
+  }
+
+  .atm-hero-img {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    border-radius: var(--atm-r);
+  }
+
+  /* ── Desktop split ── */
+  @media (min-width: 1024px) {
+    .atm-hero {
+      display: flex;
+      align-items: center;
+      min-height: calc(100vh - 72px);
+      min-height: calc(100dvh - 72px);
+    }
+
+    .atm-hero-grid {
+      width: 100%;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: clamp(48px, 5vw, 88px);
+    }
+
+    .atm-hero-img {
+      max-width: 440px;
+    }
+  }
+
+  /* ── Mobile: text sized to fit the first screen, render below it ── */
+  @media (max-width: 1023px) {
+    .atm-hero-visual {
+      order: 2;
+    }
+
+    .atm-hero-img {
+      max-width: min(300px, 70vw);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .atm-nav-inner {
+      height: 64px;
+      gap: 14px;
+    }
+
+    .atm-nav-logo {
+      font-size: 17px;
+    }
+
+    .atm-nav-links {
+      gap: 15px;
+    }
+
+    .atm-nav-links a {
+      font-size: 13px;
+    }
+
+    .atm-hero-actions .atm-btn {
+      flex: 1 1 auto;
+      justify-content: center;
+      padding-inline: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atm-btn:hover,
+    .atm-btn:active {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  /* Configurator resume. Reads saved state only, writes nothing, and shows
+     the link exclusively when a real session past step 1 exists. */
+  (function () {
+    var link = document.getElementById('atm-hero-resume');
+    var label = document.getElementById('atm-hero-resume-text');
+    if (!link || !label) return;
+
+    var steps = ['', 'Circle Setup', 'Aroma Vibe', 'Öle mischen', 'Vessel', 'Label'];
+
+    try {
+      var raw = localStorage.getItem('alch_session');
+      if (!raw) return;
+
+      var step = (JSON.parse(raw) || {}).currentStep || 1;
+      if (step <= 1) return;
+
+      label.textContent = 'Weiter bei: ' + (steps[step] || 'Schritt ' + step);
+      link.href = '/pages/konfigurator#step=' + step;
+      link.hidden = false;
+      link.classList.add('is-visible');
+    } catch (e) {
+      /* Corrupt or blocked storage: leave the link hidden. */
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Atramenti Hero",
+  "tag": "div",
+  "class": "atramenti-hero-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Atramenti Hero"
+    }
+  ]
+}
+{% endschema %}

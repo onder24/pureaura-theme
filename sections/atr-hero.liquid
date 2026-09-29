@@ -1,0 +1,243 @@
+<div class="atr-scope atr-hero">
+  {%- comment -%} Full-Bleed-Hintergrund {%- endcomment -%}
+  <div class="atr-hero__bg">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'eager',
+          fetchpriority: 'high',
+          sizes: '100vw',
+          widths: '600,900,1200,1600,2000,2400',
+          alt: section.settings.image.alt | default: section.settings.heading
+      }}
+    {%- else -%}
+      {%- comment -%}
+        Ohne gesetztes Bild greift ein Motiv aus den Theme-Assets, damit der
+        Hero nie leer wirkt. Im Theme-Editor unter "Hintergrundbild" ersetzen.
+      {%- endcomment -%}
+      <img
+        src="{{ section.settings.fallback_image | default: 'oil-amber.jpg' | asset_url }}"
+        alt=""
+        width="890"
+        height="1200"
+        loading="eager"
+        fetchpriority="high"
+        class="atr-hero__fallback-img"
+      >
+    {%- endif -%}
+  </div>
+
+  {%- comment -%} Verlauf von unten, damit der Text auf jedem Foto lesbar bleibt {%- endcomment -%}
+  <div class="atr-hero__scrim" aria-hidden="true"></div>
+
+  <div class="atr-hero__content">
+    <div class="atr-container">
+      <div class="atr-hero__text">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="atr-hero__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- comment -%} Bewusst ohne Versalien — der einzige Titel der Seite, der normal gesetzt ist. {%- endcomment -%}
+        <h1 class="atr-hero__heading">{{ section.settings.heading }}</h1>
+
+        {%- if section.settings.subline != blank -%}
+          <p class="atr-hero__subline">{{ section.settings.subline }}</p>
+        {%- endif -%}
+
+        <div class="atr-hero__links">
+          {%- if section.settings.link_1_label != blank -%}
+            <a href="{{ section.settings.link_1_url | default: '#' }}" class="atr-textlink">
+              {{ section.settings.link_1_label }}
+            </a>
+          {%- endif -%}
+          {%- if section.settings.link_2_label != blank -%}
+            <a href="{{ section.settings.link_2_url | default: '#' }}" class="atr-textlink">
+              {{ section.settings.link_2_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-hero {
+    /* Grundschicht: heller Papierton, auch wenn ein Bild nicht laedt. */
+    background: linear-gradient(160deg, #faf8f5, #ede8e1);
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    overflow: hidden;
+  }
+
+  .atr-hero__bg,
+  .atr-hero__scrim {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Ueberstimmt .atr-scope img { height: auto } aus dem Design-System. */
+  .atr-scope.atr-hero .atr-hero__bg img,
+  .atr-scope.atr-hero .atr-hero__fallback-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /*
+   * Kein Schleier ueber dem Motiv - das Bild bleibt voll sichtbar.
+   * Die Lesbarkeit uebernimmt der Textschein weiter unten.
+   */
+  .atr-hero__scrim {
+    background: none;
+  }
+
+  .atr-hero__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-bottom: 56px;
+  }
+
+  .atr-hero__text {
+    max-width: 36rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+    color: var(--atr-ink);
+    /* Weicher heller Schein statt Flaechenverlauf - deckt das Bild nicht ab. */
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.95), 0 2px 18px rgba(255, 255, 255, 0.8);
+  }
+
+  .atr-hero__eyebrow {
+    margin: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-wide2);
+    color: var(--atr-muted);
+  }
+
+  .atr-hero__heading {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .atr-hero__subline {
+    margin: 0;
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.7;
+    color: rgba(10, 10, 10, 0.75);
+  }
+
+  .atr-hero__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px 32px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-hero {
+      height: 85vh;
+    }
+
+    .atr-hero__content {
+      padding-bottom: 80px;
+    }
+
+    .atr-hero__text {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    .atr-hero__heading {
+      font-size: 52px;
+    }
+
+    .atr-hero__links {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Hero",
+  "tag": "section",
+  "class": "atr-section-hero",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hintergrundbild",
+      "info": "Hochformatiges Motiv wählen — auf Mobile wird 90vh hoch beschnitten."
+    },
+    {
+      "type": "select",
+      "id": "fallback_image",
+      "label": "Motiv ohne eigenes Bild",
+      "options": [
+        { "value": "oil-amber.jpg", "label": "Amber" },
+        { "value": "oil-oud.jpg", "label": "Oud" },
+        { "value": "oil-olibanum.jpg", "label": "Olibanum" },
+        { "value": "oil-palo-santo.jpg", "label": "Palo Santo" },
+        { "value": "oil-schwarze-orchidee.jpg", "label": "Schwarze Orchidee" }
+      ],
+      "default": "oil-amber.jpg"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (optional)"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Dein Duft. In Tinte geschrieben."
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Kursive Subline",
+      "default": "Die Welt braucht kein weiteres Parfum. Sie braucht deins."
+    },
+    {
+      "type": "text",
+      "id": "link_1_label",
+      "label": "Textlink 1",
+      "default": "Date-Night-Set entdecken"
+    },
+    {
+      "type": "url",
+      "id": "link_1_url",
+      "label": "Ziel Textlink 1"
+    },
+    {
+      "type": "text",
+      "id": "link_2_label",
+      "label": "Textlink 2",
+      "default": "Signature-Düfte"
+    },
+    {
+      "type": "url",
+      "id": "link_2_url",
+      "label": "Ziel Textlink 2"
+    }
+  ],
+  "presets": [{ "name": "ATR Hero" }]
+}
+{% endschema %}

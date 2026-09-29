@@ -1,0 +1,286 @@
+{%- liquid
+  assign marquee = section.settings.marquee_text
+-%}
+
+<div class="atr-scope atr-dn">
+  {%- comment -%}
+    Laufschrift: Text doppelt im Track, die Animation wandert um genau 50 %.
+    Dadurch ist der Rücksprung unsichtbar.
+  {%- endcomment -%}
+  <div class="atr-dn__marquee">
+    <div class="atr-dn__track">
+      <span class="atr-dn__text">
+        {%- for i in (1..4) -%}{{ marquee }}{%- endfor -%}
+      </span>
+      <span class="atr-dn__text" aria-hidden="true">
+        {%- for i in (1..4) -%}{{ marquee }}{%- endfor -%}
+      </span>
+    </div>
+  </div>
+
+  <div class="atr-dn__media">
+    {%- if section.settings.image != blank -%}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          sizes: '100vw',
+          widths: '800,1200,1600,2000,2400',
+          alt: section.settings.image.alt | default: 'Flakons'
+      }}
+    {%- else -%}
+      <img
+        src="{{ 'flakon-edge.png' | asset_url }}"
+        alt=""
+        width="1200"
+        height="800"
+        loading="lazy"
+        class="atr-dn__fallback"
+      >
+    {%- endif -%}
+  </div>
+
+  <div class="atr-container">
+    <div class="atr-dn__body">
+      {%- if section.settings.text != blank -%}
+        <div class="atr-dn__copy">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="atr-dn__points">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="atr-dn__icon">
+                {%- case block.settings.icon -%}
+                  {%- when 'people' -%}
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
+                      <circle cx="5" cy="4.5" r="2.2" stroke="currentColor" stroke-width="1"></circle>
+                      <circle cx="10.4" cy="5.4" r="1.7" stroke="currentColor" stroke-width="1"></circle>
+                      <path d="M1.4 12.4c0-2 1.6-3.4 3.6-3.4s3.6 1.4 3.6 3.4" stroke="currentColor" stroke-width="1"></path>
+                      <path d="M10 9.2c1.6 0 2.6 1.1 2.6 2.6" stroke="currentColor" stroke-width="1"></path>
+                    </svg>
+                  {%- when 'truck' -%}
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
+                      <path d="M.8 3.2h7.4v6H.8z" stroke="currentColor" stroke-width="1"></path>
+                      <path d="M8.2 5.6h2.6l2.4 2.2v1.4H8.2z" stroke="currentColor" stroke-width="1"></path>
+                      <circle cx="4" cy="10.8" r="1.3" stroke="currentColor" stroke-width="1"></circle>
+                      <circle cx="10.6" cy="10.8" r="1.3" stroke="currentColor" stroke-width="1"></circle>
+                    </svg>
+                  {%- else -%}
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
+                      <line x1="1" y1="4" x2="13" y2="4" stroke="currentColor" stroke-width="1"></line>
+                      <line x1="1" y1="10" x2="13" y2="10" stroke="currentColor" stroke-width="1"></line>
+                      <circle cx="5" cy="4" r="1.6" stroke="currentColor" stroke-width="1"></circle>
+                      <circle cx="9.5" cy="10" r="1.6" stroke="currentColor" stroke-width="1"></circle>
+                    </svg>
+                {%- endcase -%}
+              </span>
+              <span>{{ block.settings.label }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_link | default: '#' }}" class="atr-btn atr-btn--solid">
+          {{ section.settings.cta_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-dn {
+    width: 100%;
+    background-color: var(--atr-sand);
+    color: var(--atr-ink);
+    padding-block: 64px;
+    overflow: hidden;
+  }
+
+  .atr-dn__marquee {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .atr-dn__track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: atr-dn-scroll 32s linear infinite;
+    will-change: transform;
+  }
+
+  .atr-dn__marquee:hover .atr-dn__track {
+    animation-play-state: paused;
+  }
+
+  .atr-dn__text {
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: var(--atr-tracking-wide3);
+    line-height: 1.2;
+  }
+
+  @keyframes atr-dn-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atr-dn__track {
+      animation: none;
+    }
+  }
+
+  .atr-dn__media {
+    margin-top: 48px;
+    width: 100%;
+    height: 220px;
+  }
+
+  .atr-scope .atr-dn__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .atr-scope .atr-dn__fallback {
+    object-fit: contain;
+    background: var(--atr-mist);
+  }
+
+  /* Nur der Fliesstext ist auf 28rem begrenzt — die Stichpunkte sollen
+     nebeneinander passen und brauchen die volle Breite. */
+  .atr-dn__body {
+    margin: 48px auto 0;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+
+  .atr-dn__copy {
+    max-width: 28rem;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--atr-muted);
+  }
+
+  .atr-dn__copy p {
+    margin: 0;
+  }
+
+  .atr-dn__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px 32px;
+  }
+
+  .atr-dn__points li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .atr-dn__icon {
+    line-height: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .atr-dn__text {
+      font-size: 48px;
+    }
+
+    .atr-dn__media {
+      height: 320px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Date Night",
+  "tag": "section",
+  "class": "atr-section-datenight",
+  "settings": [
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Laufschrift",
+      "default": "Date Night Set  ·  Write your scent  ·  "
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Flaschenreihe",
+      "info": "Breites Motiv auf dunklem Grund."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Beschreibung",
+      "default": "<p>Zwei Menschen, ein Abend, ein gemeinsamer Duft. Das Date-Night-Set enthält alles, um zu zweit euer eigenes Parfum zu komponieren – Schritt für Schritt, ohne Vorkenntnisse.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button-Text",
+      "default": "Set konfigurieren"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "Button-Link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Stichpunkt",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "sliders", "label": "Regler" },
+            { "value": "people", "label": "Personen" },
+            { "value": "truck", "label": "Versand" }
+          ],
+          "default": "sliders"
+        },
+        { "type": "text", "id": "label", "label": "Text", "default": "Konfigurierbar" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Date Night",
+      "blocks": [
+        { "type": "point", "settings": { "icon": "sliders", "label": "Konfigurierbar" } },
+        { "type": "point", "settings": { "icon": "people", "label": "Für 2 Personen" } },
+        { "type": "point", "settings": { "icon": "truck", "label": "Versandfertig in 48 h" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

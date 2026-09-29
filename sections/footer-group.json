@@ -1,0 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "name": "t:sections.footer.name",
+  "type": "footer",
+  "sections": {
+    "atr_footer": {
+      "type": "atr-footer",
+      "blocks": {
+        "g1": {
+          "type": "menu",
+          "settings": {
+            "title": "Shop",
+            "menu": "footer"
+          }
+        },
+        "g2": {
+          "type": "menu",
+          "settings": {
+            "title": "Erlebnisse",
+            "menu": "footer"
+          }
+        },
+        "g3": {
+          "type": "menu",
+          "settings": {
+            "title": "Information",
+            "menu": "footer"
+          }
+        },
+        "g4": {
+          "type": "menu",
+          "settings": {
+            "title": "Kontakt",
+            "menu": "footer"
+          }
+        },
+        "g5": {
+          "type": "menu",
+          "settings": {
+            "title": "Legal",
+            "menu": "footer"
+          }
+        }
+      },
+      "block_order": [
+        "g1",
+        "g2",
+        "g3",
+        "g4",
+        "g5"
+      ],
+      "settings": {
+        "brand": "Atramenti",
+        "show_rating": true,
+        "rating": "4,8",
+        "review_count": "214",
+        "payment_methods": "Visa, Mastercard, PayPal, Klarna, Apple Pay"
+      }
+    }
+  },
+  "order": [
+    "atr_footer"
+  ]
+}

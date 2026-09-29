@@ -1,0 +1,227 @@
+{% comment %}
+  ATRAMENTI FAQ  ·  Forest & Amber
+
+  Extracted from atramenti-hero.liquid, which was rendering a hero, a
+  particle canvas and this FAQ from one 1218-line file.
+
+  Changed:
+  - Built on native <details>/<summary> instead of a JS toggle. The old
+    version animated max-height to 200px, so any answer taller than that
+    was silently clipped. Native disclosure also gives keyboard support,
+    correct semantics and in-page find for free.
+  - Eyebrow dropped: the page budget of two is spent on hero and testimonials.
+  - Copy: en-dashes replaced (Section 9.G bans them outright), and
+    "Wie lange hält der fertige Parfum" corrected to "das fertige Parfum".
+
+  Note: templates/page.faq.json is a separate, fuller FAQ page. This block
+  and that page will drift apart unless one becomes the source of truth.
+{% endcomment %}
+
+<section class="atm atm-section atm-faq">
+  <div class="atm-wrap atm-faq-inner">
+    <header class="atm-faq-head atm-reveal">
+      <h2 class="atm-display atm-h2">Häufige Fragen</h2>
+      <p class="atm-body atm-faq-sub">
+        Alles, was ihr über das Date Night Erlebnis wissen müsst.
+      </p>
+    </header>
+
+    <div class="atm-faq-list atm-reveal" data-atm-delay="80">
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Wie lange dauert das Date Night Erlebnis?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Plant etwa 60 bis 90 Minuten ein. Ihr nehmt euch Zeit für die Auswahl der Essenzen, das
+            Mischen und das Gestalten eures persönlichen Etiketts. Kein Zeitdruck, nur euer Moment.
+          </p>
+        </div>
+      </details>
+
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Brauchen wir Vorkenntnisse in der Parfümherstellung?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Absolut keine Vorkenntnisse nötig. Unser digitaler Mentor führt euch Schritt für Schritt
+            durch den Prozess. Jede Essenz hat eine Beschreibung, und ihr entscheidet gemeinsam nach
+            Gefühl.
+          </p>
+        </div>
+      </details>
+
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Was passiert, wenn wir unterschiedliche Geschmäcker haben?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Genau das macht das Date Night besonders. Ihr verhandelt, kompromisst und erschafft
+            gemeinsam etwas Einzigartiges. Das Ergebnis ist ein Duft, der beide repräsentiert, ein
+            echtes gemeinsames Kunstwerk.
+          </p>
+        </div>
+      </details>
+
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Wie lange hält das fertige Parfum?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Euer personalisiertes Eau de Parfum (100 ml) hält bei normaler Anwendung etwa 12 bis 18
+            Monate. Die Qualität der verwendeten Nischenessenzen sorgt für eine reiche Silage und
+            gute Haltbarkeit auf der Haut.
+          </p>
+        </div>
+      </details>
+
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Kann man das Kit auch als Geschenk kaufen?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Ja. Das Date Night Set ist ein perfektes Geschenk für Paare, zum Jubiläum, Geburtstag
+            oder einfach so. Wählt beim Checkout die Geschenkverpackungsoption und das Kit kommt
+            edel verpackt an.
+          </p>
+        </div>
+      </details>
+
+      <details class="atm-faq-item" name="atm-faq">
+        <summary class="atm-faq-q">
+          Wie schnell erhalten wir unser Set?
+          <span class="atm-faq-chev">{% render 'atm-icon', name: 'caret-down' %}</span>
+        </summary>
+        <div class="atm-faq-a">
+          <p>
+            Nach Abschluss eurer Konfiguration wird euer individuelles Set innerhalb von 48 Stunden
+            versendet. Ihr erhaltet eine Tracking-Nummer per E-Mail. Exklusive CO<sub>2</sub>-neutrale
+            Verpackung inbegriffen.
+          </p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<style>
+  .atm-faq {
+    background: var(--atm-bg-2);
+  }
+
+  .atm-faq-inner {
+    max-width: 780px;
+  }
+
+  .atm-faq-head {
+    margin-bottom: clamp(36px, 4.5vw, 56px);
+  }
+
+  .atm-faq-head h2 {
+    margin: 0 0 14px;
+  }
+
+  .atm-faq-sub {
+    margin: 0;
+  }
+
+  .atm-faq-item {
+    border-top: 1px solid var(--atm-line);
+  }
+
+  .atm-faq-item:last-child {
+    border-bottom: 1px solid var(--atm-line);
+  }
+
+  .atm-faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 0;
+    font-family: var(--atm-body);
+    font-size: clamp(16px, 1.3vw, 18px);
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--atm-ink);
+    cursor: pointer;
+    list-style: none;
+    transition: color 0.25s var(--atm-ease);
+  }
+
+  /* Remove the native disclosure triangle in both engines. */
+  .atm-faq-q::-webkit-details-marker {
+    display: none;
+  }
+
+  .atm-faq-q::marker {
+    content: '';
+  }
+
+  .atm-faq-q:hover {
+    color: var(--atm-accent);
+  }
+
+  .atm-faq-chev {
+    display: flex;
+    flex-shrink: 0;
+    font-size: 18px;
+    color: var(--atm-accent);
+    transition: transform 0.3s var(--atm-ease);
+  }
+
+  .atm-faq-item[open] .atm-faq-q {
+    color: var(--atm-accent);
+  }
+
+  .atm-faq-item[open] .atm-faq-chev {
+    transform: rotate(180deg);
+  }
+
+  /* No max-height. Answers of any length render in full. */
+  .atm-faq-a {
+    padding: 0 0 24px;
+    max-width: 62ch;
+  }
+
+  .atm-faq-a p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--atm-ink-dim);
+  }
+
+  .atm-faq-a sub {
+    font-size: 0.75em;
+    vertical-align: baseline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atm-faq-chev {
+      transition: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Atramenti - FAQ",
+  "tag": "div",
+  "class": "atm-faq-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Atramenti - FAQ"
+    }
+  ]
+}
+{% endschema %}

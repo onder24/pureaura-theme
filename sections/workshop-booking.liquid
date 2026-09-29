@@ -1,0 +1,592 @@
+{{ 'alchemist-styles.css' | asset_url | stylesheet_tag }}
+
+<style>
+.wb-page {
+  background: #080e0a;
+  min-height: 100vh;
+  padding: 0 16px 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Barlow', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  overflow-x: clip;
+}
+
+.wb-page::before {
+  content: '';
+  position: fixed;
+  top: -10%; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse, rgba(74,158,116,0.05) 0%, transparent 65%);
+  pointer-events: none; z-index: 0;
+}
+
+.wb-inner {
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+  z-index: 1;
+  padding-top: 32px;
+}
+
+/* BACK LINK */
+.wb-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #4a9e74;
+  text-decoration: none;
+  margin-bottom: 28px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.wb-back:hover { opacity: 1; }
+.wb-back::before { content: '←'; font-size: 12px; }
+
+/* HEADER */
+.wb-eyebrow {
+  font-family: 'Barlow', monospace;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #4a9e74;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wb-eyebrow::before {
+  content: '';
+  display: block;
+  width: 16px; height: 1px;
+  background: #4a9e74;
+}
+.wb-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #e2ebe6;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.wb-subtitle {
+  font-size: 13px;
+  font-weight: 300;
+  color: #7d9e90;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.wb-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(to right, rgba(168,191,178,0.22), transparent);
+  margin: 14px 0 28px;
+}
+
+/* HERO CARD */
+.wb-hero {
+  background: rgba(12,20,16,0.65);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(168,191,178,0.12);
+  border-left: 2px solid #4a9e74;
+  border-radius: 14px;
+  padding: 24px 22px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.wb-hero::after {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 200px; height: 200px;
+  background: radial-gradient(ellipse, rgba(74,158,116,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.wb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Barlow', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #4a9e74;
+  background: rgba(74,158,116,0.08);
+  border: 1px solid rgba(74,158,116,0.2);
+  border-radius: 999px;
+  padding: 4px 12px;
+  margin-bottom: 14px;
+}
+.wb-badge::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #4a9e74;
+  box-shadow: 0 0 6px #4a9e74;
+  animation: wbPulse 2.5s infinite ease-out;
+}
+@keyframes wbPulse {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(3); opacity: 0; }
+}
+.wb-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #e2ebe6;
+  margin-bottom: 8px;
+}
+.wb-hero-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: #a8bfb2;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.wb-facts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wb-fact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #7d9e90;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(168,191,178,0.12);
+  border-radius: 999px;
+  padding: 5px 12px;
+}
+.wb-fact::before {
+  content: '';
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #3d8762;
+  flex-shrink: 0;
+}
+
+/* PERSON COUNT */
+.wb-count-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.wb-count-btn {
+  flex: 1;
+  background: rgba(12,20,16,0.65);
+  border: 1px solid rgba(168,191,178,0.12);
+  border-radius: 10px;
+  padding: 14px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+.wb-count-btn:hover {
+  border-color: rgba(168,191,178,0.22);
+  background: rgba(22,38,28,0.75);
+}
+.wb-count-btn.active {
+  border-color: rgba(74,158,116,0.5);
+  background: linear-gradient(135deg, rgba(19,51,36,0.7), rgba(12,22,16,0.8));
+  box-shadow: 0 0 24px rgba(74,158,116,0.2);
+}
+.wb-count-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #4a9e74, transparent);
+  border-radius: 2px;
+}
+.wb-count-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #c8d8ce;
+  line-height: 1;
+}
+.wb-count-btn.active .wb-count-num { color: #e2ebe6; }
+.wb-count-label {
+  font-family: 'Barlow', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #5a7a6c;
+}
+.wb-count-btn.active .wb-count-label { color: #4a9e74; }
+
+/* SECTION TITLE */
+.wb-section-title {
+  font-family: 'Barlow', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #5a7a6c;
+  margin-bottom: 12px;
+}
+
+/* DATE GRID */
+.wb-date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.wb-date-btn {
+  background: rgba(12,20,16,0.65);
+  border: 1px solid rgba(168,191,178,0.12);
+  border-radius: 10px;
+  padding: 14px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+}
+.wb-date-btn:hover {
+  border-color: rgba(168,191,178,0.22);
+  background: rgba(22,38,28,0.75);
+}
+.wb-date-btn.active {
+  border-color: rgba(74,158,116,0.5);
+  background: linear-gradient(135deg, rgba(19,51,36,0.7), rgba(12,22,16,0.8));
+  box-shadow: 0 0 24px rgba(74,158,116,0.2);
+}
+.wb-date-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #4a9e74, transparent);
+  border-radius: 2px;
+}
+.wb-date-weekday {
+  font-family: 'Barlow', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #5a7a6c;
+}
+.wb-date-btn.active .wb-date-weekday { color: #4a9e74; }
+.wb-date-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: #c8d8ce;
+  line-height: 1;
+}
+.wb-date-btn.active .wb-date-num { color: #e2ebe6; }
+.wb-date-time {
+  font-size: 11px;
+  font-weight: 500;
+  color: #3d8762;
+  letter-spacing: 0.5px;
+}
+.wb-date-btn.active .wb-date-time { color: #6db48e; }
+
+/* PRICE SUMMARY */
+.wb-summary {
+  background: rgba(12,20,16,0.65);
+  border: 1px solid rgba(168,191,178,0.12);
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+.wb-summary-label {
+  font-family: 'Barlow', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #5a7a6c;
+}
+.wb-summary-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 300;
+  color: #c9aa6e;
+}
+
+/* CTA BUTTON */
+.wb-cta {
+  width: 100%;
+  padding: 17px 24px;
+  background: linear-gradient(135deg, #133324, #2f6e4f);
+  color: #e2ebe6;
+  border: 1px solid rgba(74,158,116,0.5);
+  border-radius: 8px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.35s, box-shadow 0.35s, transform 0.2s;
+  box-shadow: 0 0 24px rgba(74,158,116,0.2);
+  position: relative;
+  overflow: hidden;
+}
+.wb-cta:not(:disabled):hover {
+  background: linear-gradient(135deg, #1f5038, #3d8762);
+  box-shadow: 0 0 40px rgba(74,158,116,0.35);
+  transform: translateY(-1px);
+}
+.wb-cta:disabled {
+  background: #0c1410;
+  color: #3d5a4e;
+  border-color: rgba(168,191,178,0.1);
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* TOAST */
+.wb-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(12,20,16,0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(168,191,178,0.22);
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 11px;
+  color: #e2ebe6;
+  font-family: 'Barlow', monospace;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  z-index: 3000;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.wb-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.wb-toast.error { border-color: rgba(220,80,80,0.4); color: #ff9090; }
+.wb-toast.success { border-color: rgba(74,158,116,0.5); color: #6db48e; }
+</style>
+
+<div class="wb-page">
+  <div class="wb-inner">
+
+    <a href="/" class="wb-back">Zurück zur Startseite</a>
+
+    <!-- HEADER -->
+    <div class="wb-eyebrow">Online · Zoom</div>
+    <h1 class="wb-title">Workshop</h1>
+    <p class="wb-subtitle">Parfümeur-Session · 90 Minuten · 29 € p.P.</p>
+    <div class="wb-divider"></div>
+
+    <!-- HERO -->
+    <div class="wb-hero">
+      <div class="wb-badge">Live · Jeden Sonntag</div>
+      <div class="wb-hero-title">Parfümeur-Session</div>
+      <p class="wb-hero-desc">90 Minuten mit einem professionellen Parfümeur — persönlich, interaktiv, auf deine Komposition zugeschnitten. Tauche ein in die Welt der Düfte und erhalte professionelle Begleitung bei deiner Kreation.</p>
+      <div class="wb-facts">
+        <span class="wb-fact">90 Minuten</span>
+        <span class="wb-fact">Online via Zoom</span>
+        <span class="wb-fact">29 € p.P.</span>
+        <span class="wb-fact">Jeden Sonntag</span>
+        <span class="wb-fact">14:00 & 19:00 Uhr</span>
+      </div>
+    </div>
+
+    <!-- PERSON COUNT -->
+    <p class="wb-section-title">Personenanzahl</p>
+    <div class="wb-count-row" id="wb-count-row"></div>
+
+    <!-- DATE SELECTION -->
+    <p class="wb-section-title" id="wb-date-label">Termin wählen</p>
+    <div class="wb-date-grid" id="wb-date-grid"></div>
+
+    <!-- SUMMARY -->
+    <div class="wb-summary">
+      <span class="wb-summary-label">Gesamt</span>
+      <span class="wb-summary-price" id="wb-price">29 €</span>
+    </div>
+
+    <!-- CTA -->
+    <button class="wb-cta" id="wb-cta-btn" onclick="wbAddToCart()" disabled>
+      Termin buchen
+    </button>
+
+  </div>
+</div>
+
+<div class="wb-toast" id="wb-toast"></div>
+
+<script>
+(function() {
+
+  var selectedSlot = null;
+  var selectedCount = 1;
+  var WORKSHOP_VARIANT_ID = 57044740505945; // TODO: replace with real workshop variant ID
+  var PRICE_PER_PERSON = 29;
+  var MAX_PERSONS = 6;
+
+  function getUpcomingSundays(n) {
+    var sundays = [];
+    var d = new Date();
+    d.setDate(d.getDate() + 1);
+    while (sundays.length < n) {
+      if (d.getDay() === 0) sundays.push(new Date(d));
+      d.setDate(d.getDate() + 1);
+    }
+    return sundays;
+  }
+
+  function formatDate(d) {
+    var months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    return {
+      weekday: 'So',
+      day: d.getDate() + '. ' + months[d.getMonth()],
+      iso: d.toISOString().slice(0,10)
+    };
+  }
+
+  function showToast(msg, type) {
+    var t = document.getElementById('wb-toast');
+    t.textContent = msg;
+    t.className = 'wb-toast' + (type ? ' ' + type : '');
+    void t.offsetWidth;
+    t.classList.add('show');
+    clearTimeout(window._wbToast);
+    window._wbToast = setTimeout(function() { t.classList.remove('show'); }, 2800);
+  }
+
+  function updatePrice() {
+    document.getElementById('wb-price').textContent = (selectedCount * PRICE_PER_PERSON) + ' €';
+  }
+
+  function renderCount() {
+    var row = document.getElementById('wb-count-row');
+    row.innerHTML = '';
+    for (var i = 1; i <= MAX_PERSONS; i++) {
+      (function(n) {
+        var btn = document.createElement('div');
+        btn.className = 'wb-count-btn' + (n === selectedCount ? ' active' : '');
+        btn.innerHTML =
+          '<span class="wb-count-num">' + n + '</span>' +
+          '<span class="wb-count-label">' + (n === 1 ? 'Person' : 'Personen') + '</span>';
+        btn.addEventListener('click', function() {
+          selectedCount = n;
+          row.querySelectorAll('.wb-count-btn').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          updatePrice();
+          checkReady();
+        });
+        row.appendChild(btn);
+      })(i);
+    }
+  }
+
+  function renderDates() {
+    var grid = document.getElementById('wb-date-grid');
+    var sundays = getUpcomingSundays(6);
+    grid.innerHTML = '';
+
+    sundays.forEach(function(sun) {
+      var fmt = formatDate(sun);
+      [{time: '14:00 Uhr', key: fmt.iso + '_14'}, {time: '19:00 Uhr', key: fmt.iso + '_19'}].forEach(function(slot) {
+        var btn = document.createElement('div');
+        btn.className = 'wb-date-btn';
+        btn.innerHTML =
+          '<span class="wb-date-weekday">' + fmt.weekday + '</span>' +
+          '<span class="wb-date-num">' + fmt.day + '</span>' +
+          '<span class="wb-date-time">' + slot.time + '</span>';
+        btn.addEventListener('click', function() {
+          grid.querySelectorAll('.wb-date-btn').forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          selectedSlot = slot;
+          checkReady();
+        });
+        grid.appendChild(btn);
+      });
+    });
+  }
+
+  function checkReady() {
+    document.getElementById('wb-cta-btn').disabled = !selectedSlot;
+  }
+
+  window.wbAddToCart = async function() {
+    if (!selectedSlot) { showToast('Bitte einen Termin wählen', 'error'); return; }
+
+    var btn = document.getElementById('wb-cta-btn');
+    btn.disabled = true;
+    btn.textContent = 'Wird hinzugefügt...';
+
+    var d = new Date(selectedSlot.key.split('_')[0]);
+    var months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+    var dateStr = 'So ' + d.getDate() + '. ' + months[d.getMonth()] + ' · ' + selectedSlot.time;
+
+    try {
+      var res = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            id: WORKSHOP_VARIANT_ID,
+            quantity: selectedCount,
+            properties: {
+              'Typ':       'Zoom Workshop · Parfümeur-Session',
+              'Dauer':     '90 Minuten',
+              'Termin':    dateStr,
+              'Personen':  String(selectedCount)
+            }
+          }]
+        })
+      });
+      if (res.ok) {
+        showToast('Termin hinzugefügt ✓', 'success');
+        setTimeout(function() { window.location.href = '/cart'; }, 900);
+      } else {
+        throw new Error('cart error');
+      }
+    } catch(e) {
+      showToast('Fehler beim Buchen. Bitte erneut versuchen.', 'error');
+      btn.disabled = false;
+      btn.textContent = 'Termin buchen';
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderCount();
+    renderDates();
+    updatePrice();
+  });
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Workshop Buchung",
+  "settings": []
+}
+{% endschema %}

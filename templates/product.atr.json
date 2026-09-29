@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "atr-product",
+      "settings": {
+        "spec_fallback": "50 ml",
+        "spec_suffix": "Eau de Parfum",
+        "legend": "Die Linie zeigt, wie lange eine Note auf der Haut bleibt. Von flüchtig nach bleibend.",
+        "note_1": "50 ml Eau de Parfum, von Hand abgefüllt in Duisburg.",
+        "note_2": "Die vollständige Liste der Inhaltsstoffe findest du über den QR-Code am Flakon.",
+        "note_3": "Bei empfindlicher Haut vor der ersten Anwendung in der Armbeuge testen und einen Tag abwarten.",
+        "collection": "signature",
+        "siblings_lead": "Es gibt drei. Das sind die beiden anderen."
+      }
+    }
+  },
+  "order": ["main"]
+}

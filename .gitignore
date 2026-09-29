@@ -1,0 +1,16 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Local backups & tooling
+.backup-pre-atr/
+.claude/settings.local.json
+Searches/
+desktop.ini
+
+# Shopify CLI
+.shopify/

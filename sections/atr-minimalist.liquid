@@ -1,0 +1,163 @@
+<div class="atr-scope atr-section atr-section--sand">
+  <div class="atr-container">
+    <div class="atr-labelled">
+      <div class="atr-minimalist__label">
+        <span class="atr-label-vertical">{{ section.settings.label }}</span>
+      </div>
+
+      <div class="atr-labelled__body">
+        <div class="atr-minimalist__grid">
+          <div class="atr-media atr-media--tall">
+            {%- if section.settings.image != blank -%}
+              {{
+                section.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  sizes: '(min-width: 990px) 45vw, 90vw',
+                  widths: '400,600,900,1200',
+                  alt: section.settings.image.alt | default: section.settings.heading
+              }}
+            {%- else -%}
+              {{ 'lifestyle-1' | placeholder_svg_tag: '' }}
+            {%- endif -%}
+          </div>
+
+          <div class="atr-stack atr-stack--md atr-minimalist__text">
+            <h2 class="atr-h-display atr-h2">{{ section.settings.heading }}</h2>
+
+            {%- if section.settings.quote != blank -%}
+              <p class="atr-subline">{{ section.settings.quote }}</p>
+            {%- endif -%}
+
+            {%- if section.settings.body != blank -%}
+              <div class="atr-body atr-body--muted atr-measure">{{ section.settings.body }}</div>
+            {%- endif -%}
+
+            {%- if section.blocks.size > 0 -%}
+              <ul class="atr-minimalist__list">
+                {%- for block in section.blocks -%}
+                  <li {{ block.shopify_attributes }}>
+                    <span class="atr-meta">{{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+                    <span>{{ block.settings.text }}</span>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            {%- if section.settings.cta_label != blank -%}
+              <div class="atr-row">
+                <a href="{{ section.settings.cta_link | default: '#' }}" class="atr-btn atr-btn--outline">
+                  {{ section.settings.cta_label }}
+                </a>
+              </div>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .atr-minimalist__label {
+    flex: 0 0 auto;
+    padding-top: 4px;
+  }
+
+  .atr-minimalist__grid {
+    display: grid;
+    gap: 32px;
+  }
+
+  .atr-minimalist__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--atr-mist);
+  }
+
+  .atr-minimalist__list li {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--atr-mist);
+    font-size: 14px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .atr-minimalist__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "ATR Minimalist",
+  "tag": "section",
+  "class": "atr-section-minimalist",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Vertikales Randlabel",
+      "default": "The Modern Minimalist"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Überschrift",
+      "default": "Weniger Zeilen, mehr Bedeutung"
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Kursives Zitat",
+      "default": "Eine Handschrift, keine Ansage."
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Fließtext",
+      "default": "<p>Klare, lineare Kompositionen mit höchstens fünf Rohstoffen. Nichts wird kaschiert, nichts überlagert — jeder Bestandteil bleibt lesbar.</p>"
+    },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button-Text",
+      "default": "Kollektion ansehen"
+    },
+    { "type": "url", "id": "cta_link", "label": "Button-Link" }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Merkmal",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Höchstens fünf Rohstoffe pro Komposition"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "ATR Minimalist",
+      "blocks": [
+        { "type": "point", "settings": { "text": "Höchstens fünf Rohstoffe pro Komposition" } },
+        { "type": "point", "settings": { "text": "Keine Füllstoffe, keine Fixateure aus Bequemlichkeit" } },
+        { "type": "point", "settings": { "text": "Volldeklaration auf jedem Etikett" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

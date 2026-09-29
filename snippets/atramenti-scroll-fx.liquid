@@ -1,0 +1,326 @@
+{% comment %}
+  ATRAMENTI — Liquid Reveal & Parallax Scroll FX
+  Nur auf der Startseite geladen (template == 'index').
+{% endcomment %}
+
+<style>
+/* ═══════════════════════════════════════════════
+   ALCH — SCROLL FX
+   Ambient orb · Liquid veil · Progress bar · Sparks
+═══════════════════════════════════════════════ */
+
+/* ── SCROLL PROGRESS BAR ── */
+#alch-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  transform-origin: left center;
+  transform: scaleX(0);
+  z-index: 99999;
+  pointer-events: none;
+  /* Shimmer gradient */
+  background: linear-gradient(
+    90deg,
+    rgba(74,158,116,0.3) 0%,
+    #4a9e74 25%,
+    #8ad4b4 50%,
+    #4a9e74 75%,
+    rgba(74,158,116,0.3) 100%
+  );
+  background-size: 200% auto;
+  animation: alchBarShimmer 2.5s linear infinite;
+  box-shadow: 0 0 12px rgba(74,158,116,0.7), 0 0 4px rgba(74,158,116,0.4);
+}
+
+@keyframes alchBarShimmer {
+  from { background-position: 0% center; }
+  to   { background-position: 200% center; }
+}
+
+/* ── AMBIENT ORB ── */
+#alch-orb {
+  position: fixed;
+  width: 1000px;
+  height: 1000px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(74,158,116,0.065) 0%,
+    rgba(74,158,116,0.025) 30%,
+    rgba(74,158,116,0.008) 55%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+  animation: alchOrbPulse 6s ease-in-out infinite;
+}
+
+@keyframes alchOrbPulse {
+  0%,100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50%     { opacity: 0.7; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+/* ── VEIL (liquid overlay per section) ── */
+.alch-veil {
+  position: absolute;
+  inset: -1px;          /* overlap 1px to avoid hairline gaps */
+  z-index: 30;
+  pointer-events: none;
+  will-change: transform;
+  /* Spring easing: slow start, fast finish — like liquid snapping upward */
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark fill with liquid drip silhouette at bottom */
+.alch-veil-body {
+  position: absolute;
+  inset: 0;
+  bottom: -4px;         /* tiny overshoot prevents gap at bottom */
+  background: #080e0a;
+  /* Organic drip wave — 3 deep drips + subtle peaks between */
+  clip-path: polygon(
+    0%   0%,
+    100% 0%,
+    100% 76%,
+    93%  87%,
+    87%  100%,   /* ← deep drip */
+    81%  88%,
+    74%  95%,
+    68%  82%,
+    61%  97%,    /* ← deep drip */
+    55%  83%,
+    48%  96%,
+    42%  83%,
+    35%  98%,    /* ← deep drip */
+    28%  87%,
+    21%  94%,
+    14%  82%,
+    7%   92%,
+    0%   76%
+  );
+}
+
+/* Subtle emerald edge glow where the drip wave meets the content */
+.alch-veil-edge {
+  position: absolute;
+  left: -5%;
+  right: -5%;
+  height: 70px;
+  /* Sits at 76% of the veil height (matching wave baseline) */
+  top: calc(76% - 50px);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(74,158,116,0.09) 40%,
+    rgba(74,158,116,0.04) 70%,
+    transparent 100%
+  );
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+/* Lifted state: veil slides up, drips are last thing visible */
+.alch-veil.alch-lifted {
+  transform: translateY(-101%);
+}
+
+/* ── SPARK PARTICLES ── */
+.alch-spark {
+  position: fixed;
+  border-radius: 50%;
+  background: #4a9e74;
+  box-shadow: 0 0 8px rgba(74,158,116,1), 0 0 3px rgba(74,158,116,0.5);
+  pointer-events: none;
+  z-index: 60;
+  will-change: transform, opacity;
+}
+
+/* ── SECTION CONTENT ENTRANCE ── */
+.alch-content-wrap {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0.25s;   /* fires after veil starts lifting */
+}
+
+.alch-content-wrap.alch-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .alch-veil-body {
+    clip-path: polygon(
+      0%   0%,
+      100% 0%,
+      100% 80%,
+      87.5% 93%,
+      75%  100%,
+      62.5% 87%,
+      50%  97%,
+      37.5% 86%,
+      25%  100%,
+      12.5% 91%,
+      0%   80%
+    );
+  }
+  #alch-orb { width: 600px; height: 600px; }
+  .alch-content-wrap { transition-delay: 0.2s; }
+}
+</style>
+
+<div id="alch-bar"></div>
+<div id="alch-orb"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var bar = document.getElementById('alch-bar');
+  var progressTicking = false;
+
+  /* ── PROGRESS BAR ── */
+  function updateBar() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = max > 0 ? window.scrollY / max : 0;
+    bar.style.transform = 'scaleX(' + pct + ')';
+    progressTicking = false;
+  }
+
+  /* ── VEIL SETUP ── */
+  function setupVeils() {
+    var allSections = document.querySelectorAll('#MainContent .shopify-section');
+    // Skip first section (hero — already fully visible).
+    // Bewusst auf #MainContent begrenzt: Header- und Footer-Group sind
+    // ebenfalls .shopify-section und wuerden den Zaehler verschieben.
+    var targets = Array.from(allSections).slice(1);
+
+    targets.forEach(function (sec) {
+      var cs = window.getComputedStyle(sec);
+      if (cs.position === 'static') sec.style.position = 'relative';
+      sec.style.overflow = 'hidden';
+
+      // Wrap the section's real content for the entrance animation
+      // (everything that isn't an alch element)
+      var realChildren = Array.from(sec.children);
+      if (realChildren.length > 0) {
+        var wrap = document.createElement('div');
+        wrap.className = 'alch-content-wrap';
+        realChildren.forEach(function (child) {
+          wrap.appendChild(child);
+        });
+        sec.appendChild(wrap);
+      }
+
+      // Build veil on top
+      var veil = document.createElement('div');
+      veil.className = 'alch-veil';
+      veil.innerHTML =
+        '<div class="alch-veil-body"></div>' +
+        '<div class="alch-veil-edge"></div>';
+      sec.appendChild(veil);
+    });
+  }
+
+  /* ── INTERSECTION OBSERVER ── */
+  function setupObserver() {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var sec = entry.target;
+        var veil = sec.querySelector('.alch-veil');
+        var wrap = sec.querySelector('.alch-content-wrap');
+
+        if (veil && !veil.classList.contains('alch-lifted')) {
+          veil.classList.add('alch-lifted');
+          spawnSparks(sec);
+        }
+        if (wrap && !wrap.classList.contains('alch-in')) {
+          wrap.classList.add('alch-in');
+        }
+        // Stop observing once revealed
+        io.unobserve(sec);
+      });
+    }, {
+      threshold: 0.06,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    var allSections = document.querySelectorAll('#MainContent .shopify-section');
+    Array.from(allSections).slice(1).forEach(function (sec) {
+      io.observe(sec);
+    });
+  }
+
+  /* ── SPARK PARTICLES ── */
+  function spawnSparks(section) {
+    var rect = section.getBoundingClientRect();
+    var count = window.innerWidth < 768 ? 5 : 11;
+    // Sparks originate near the drip wave (~78% down the section)
+    var edgeY = rect.top + rect.height * 0.78;
+
+    for (var i = 0; i < count; i++) {
+      (function (idx) {
+        setTimeout(function () {
+          var spark = document.createElement('div');
+          spark.className = 'alch-spark';
+
+          var size  = 2 + Math.random() * 3.5;
+          var x     = rect.left + 0.05 * rect.width + Math.random() * rect.width * 0.9;
+          var y     = edgeY + (Math.random() - 0.4) * 60;
+          var dx    = (Math.random() - 0.5) * 160;
+          var dy    = -(35 + Math.random() * 100);
+          var dur   = 850 + Math.random() * 750;
+
+          spark.style.cssText =
+            'width:' + size + 'px;' +
+            'height:' + size + 'px;' +
+            'left:' + x + 'px;' +
+            'top:' + y + 'px;';
+
+          document.body.appendChild(spark);
+
+          var anim = spark.animate([
+            { transform: 'translate(0,0) scale(1)',                        opacity: 1   },
+            { transform: 'translate(' + (dx * 0.4) + 'px,' + (dy * 0.5) + 'px) scale(0.8)', opacity: 0.8, offset: 0.3 },
+            { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0.2)', opacity: 0 }
+          ], {
+            duration: dur,
+            easing:   'cubic-bezier(0.2, 0, 0.4, 1)',
+            fill:     'forwards'
+          });
+
+          anim.onfinish = function () { spark.remove(); };
+        }, idx * 55);
+      })(i);
+    }
+  }
+
+  /* ── SCROLL HANDLER ── */
+  function onScroll() {
+    if (!progressTicking) {
+      requestAnimationFrame(updateBar);
+      progressTicking = true;
+    }
+  }
+
+  /* ── INIT ── */
+  function init() {
+    setupVeils();
+    setupObserver();
+    updateBar();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    // Small timeout so all sections are guaranteed rendered
+    setTimeout(init, 30);
+  }
+})();
+</script>

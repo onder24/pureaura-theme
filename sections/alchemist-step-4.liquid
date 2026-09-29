@@ -1,0 +1,383 @@
+<section id="s4-root" style="padding:0; width:100%; padding-bottom:120px;">
+
+<!-- ══ SHOWCASE STAGE ══ -->
+<div class="s4-stage" id="s4-stage">
+
+  <div class="s4-frame" id="s4-frame">
+    <div class="s4-frame-c2"></div>
+    <div class="s4-frame-c3"></div>
+    <div class="s4-stage-bg" id="s4-stage-bg"></div>
+
+    <div class="s4-track" id="s4-track">
+
+      <div class="s4-slide" data-idx="0">
+        <div class="s4-bottle-wrap">
+          <div class="s4-bottle-shadow"></div>
+          <img class="s4-bottle-img" src="{{ 'flakon-classic.png' | asset_url }}" alt="Classic"
+               draggable="false" ondragstart="return false">
+        </div>
+      </div>
+
+      <div class="s4-slide" data-idx="1">
+        <div class="s4-bottle-wrap">
+          <div class="s4-bottle-shadow"></div>
+          <img class="s4-bottle-img" src="{{ 'flakon-dome.png' | asset_url }}" alt="Dome"
+               draggable="false" ondragstart="return false">
+        </div>
+      </div>
+
+      <div class="s4-slide" data-idx="2">
+        <div class="s4-bottle-wrap">
+          <div class="s4-bottle-shadow"></div>
+          <img class="s4-bottle-img" src="{{ 'flakon-edge.png' | asset_url }}" alt="Edge"
+               draggable="false" ondragstart="return false">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Left/right arrow hints -->
+    <div class="s4-arrow s4-arrow-l hide" id="s4-arrow-l">‹</div>
+    <div class="s4-arrow s4-arrow-r" id="s4-arrow-r">›</div>
+
+    <div class="s4-swipe-hint" id="s4-swipe-hint"><span>← Wischen →</span></div>
+  </div>
+
+</div>
+
+<!-- ══ INFO PANEL ══ -->
+<div class="s4-info">
+
+  <div class="s4-dots" id="s4-dots">
+    <button class="s4-dot active" onclick="s4GoTo(0)"></button>
+    <button class="s4-dot" onclick="s4GoTo(1)"></button>
+    <button class="s4-dot" onclick="s4GoTo(2)"></button>
+  </div>
+
+  <div class="s4-name-wrap">
+    <p class="s4-eyebrow">Flakon <span id="s4-idx-label">01</span> / 03</p>
+    <h2 class="s4-name" id="s4-name">Classic</h2>
+    <p class="s4-desc" id="s4-desc">Rechteckig · zeitlos · elegant</p>
+  </div>
+
+  <div class="s4-traits" id="s4-traits">
+    <span class="s4-trait">100 ml</span>
+    <span class="s4-trait">Glas</span>
+    <span class="s4-trait">Silber-Kappe</span>
+  </div>
+
+  <button class="s4-select-btn" id="s4-select-btn" onclick="s4Select()">
+    <span id="s4-select-label">Diesen Flakon wählen</span>
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none"><path d="M1 5H13M9 1L13 5L9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+
+</div>
+
+</section>
+
+<style>
+.s4-stage {
+  position: relative; width: 100%;
+  padding: 0 20px;
+  user-select: none; -webkit-user-select: none;
+}
+
+/* Decorative frame around the carousel */
+.s4-frame {
+  position: relative;
+  border-radius: 24px;
+  border: 1px solid rgba(74,158,116,0.18);
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(168,191,178,0.05),
+    inset 0 0 40px rgba(0,0,0,0.4),
+    0 24px 60px rgba(0,0,0,0.6);
+  background: #040c06;
+  height: 72vw; max-height: 420px;
+}
+/* Corner accents */
+.s4-frame::before,
+.s4-frame::after {
+  content: '';
+  position: absolute; width: 28px; height: 28px; z-index: 5; pointer-events: none;
+}
+.s4-frame::before {
+  top: 0; left: 0;
+  border-top: 2px solid rgba(74,158,116,0.5);
+  border-left: 2px solid rgba(74,158,116,0.5);
+  border-radius: 24px 0 0 0;
+}
+.s4-frame::after {
+  bottom: 0; right: 0;
+  border-bottom: 2px solid rgba(74,158,116,0.5);
+  border-right: 2px solid rgba(74,158,116,0.5);
+  border-radius: 0 0 24px 0;
+}
+/* Extra corners via stage pseudo */
+.s4-frame-c2 {
+  position: absolute; top: 0; right: 0; width: 28px; height: 28px; z-index: 5; pointer-events: none;
+  border-top: 2px solid rgba(74,158,116,0.5);
+  border-right: 2px solid rgba(74,158,116,0.5);
+  border-radius: 0 24px 0 0;
+}
+.s4-frame-c3 {
+  position: absolute; bottom: 0; left: 0; width: 28px; height: 28px; z-index: 5; pointer-events: none;
+  border-bottom: 2px solid rgba(74,158,116,0.5);
+  border-left: 2px solid rgba(74,158,116,0.5);
+  border-radius: 0 0 0 24px;
+}
+
+.s4-stage-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 80%, rgba(74,158,116,0.08) 0%, transparent 70%);
+  transition: background 0.8s ease;
+  pointer-events: none;
+}
+.s4-track {
+  display: flex; height: 100%;
+  transition: transform 0.52s cubic-bezier(0.16,1,0.3,1);
+  will-change: transform; cursor: grab;
+}
+.s4-track.dragging { transition: none; cursor: grabbing; }
+.s4-slide {
+  flex: 0 0 100%; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px 40px 16px;
+}
+.s4-bottle-wrap {
+  position: relative; height: 100%;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.s4-bottle-shadow {
+  position: absolute; bottom: -4px;
+  width: 55%; height: 18px;
+  background: radial-gradient(ellipse, rgba(0,0,0,0.65) 0%, transparent 70%);
+  border-radius: 50%; filter: blur(6px);
+}
+.s4-bottle-img {
+  height: 100%; width: auto; max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.75));
+  transition: transform 0.65s cubic-bezier(0.16,1,0.3,1), filter 0.65s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none;
+}
+.s4-slide.active .s4-bottle-img {
+  transform: translateY(-8px) scale(1.05);
+  filter: drop-shadow(0 28px 50px rgba(0,0,0,0.85)) drop-shadow(0 0 28px rgba(74,158,116,0.12));
+}
+
+/* Swipe arrows — left/right edge indicators */
+.s4-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(10,20,14,0.7); backdrop-filter: blur(10px);
+  border: 1px solid rgba(74,158,116,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(74,158,116,0.7); font-size: 16px; font-family: 'Barlow', sans-serif;
+  z-index: 4; pointer-events: none;
+  transition: opacity 0.4s;
+}
+.s4-arrow-l { left: 10px; }
+.s4-arrow-r { right: 10px; }
+.s4-arrow.hide { opacity: 0; }
+/* Swipe bounce animation on first load */
+.s4-arrow-r { animation: arrowBounce 1.6s ease-in-out 0.8s 3; }
+@keyframes arrowBounce {
+  0%,100% { transform: translateY(-50%) translateX(0); }
+  50%      { transform: translateY(-50%) translateX(4px); }
+}
+.s4-swipe-hint {
+  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+  font-family: 'Barlow', sans-serif; font-size: 9px; letter-spacing: 3px;
+  color: rgba(168,191,178,0.35); text-transform: uppercase;
+  pointer-events: none; transition: opacity 0.6s; white-space: nowrap;
+}
+.s4-swipe-hint.hidden { opacity: 0; }
+
+/* INFO */
+.s4-info {
+  max-width: 460px; margin: 0 auto;
+  padding: 22px 20px 0;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+}
+.s4-dots { display: flex; gap: 10px; align-items: center; }
+.s4-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(168,191,178,0.18); border: none; cursor: pointer; padding: 0;
+  transition: all 0.38s cubic-bezier(0.34,1.56,0.64,1);
+  -webkit-tap-highlight-color: transparent;
+}
+.s4-dot.active {
+  width: 24px; border-radius: 4px;
+  background: var(--g-400);
+  box-shadow: 0 0 12px rgba(74,158,116,0.5);
+}
+.s4-name-wrap { text-align: center; }
+.s4-eyebrow {
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: rgba(74,158,116,0.5); margin-bottom: 8px;
+}
+.s4-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 42px; font-weight: 300; font-style: italic;
+  color: #edf3ef; letter-spacing: 1px; line-height: 1; margin-bottom: 8px;
+  transition: opacity 0.25s, transform 0.25s;
+}
+.s4-name.fade { opacity: 0; transform: translateY(10px); }
+.s4-desc {
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px; color: rgba(168,191,178,0.38); letter-spacing: 1px;
+  transition: opacity 0.25s;
+}
+.s4-desc.fade { opacity: 0; }
+.s4-traits { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.s4-trait {
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: rgba(168,191,178,0.45);
+  border: 1px solid rgba(168,191,178,0.1);
+  border-radius: 999px; padding: 5px 14px;
+}
+.s4-select-btn {
+  width: 100%;
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  background: linear-gradient(135deg, #1a3329, #2f6e4f);
+  border: 1px solid rgba(74,158,116,0.35);
+  color: #e8f0ec; padding: 18px 32px; border-radius: 999px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 10px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.35s, box-shadow 0.35s, opacity 0.25s;
+  box-shadow: 0 0 24px rgba(74,158,116,0.1);
+  -webkit-tap-highlight-color: transparent;
+}
+.s4-select-btn:hover {
+  background: linear-gradient(135deg, #2f6e4f, #4a9e74);
+  box-shadow: 0 0 40px rgba(74,158,116,0.25), 0 8px 32px rgba(0,0,0,0.4);
+}
+.s4-select-btn:active { transform: scale(0.98); }
+.s4-select-btn.confirmed {
+  background: rgba(74,158,116,0.12);
+  border-color: var(--g-400); color: var(--g-300);
+  box-shadow: 0 0 20px rgba(74,158,116,0.18);
+}
+</style>
+
+<script>
+const S4_VESSELS = [
+  { name:'Classic', desc:'Rechteckig · zeitlos · elegant',  traits:['100 ml','Glas','Silber-Kappe'], glow:'rgba(74,158,116,0.09)'  },
+  { name:'Dome',    desc:'Gewölbt · weich · sinnlich',      traits:['100 ml','Glas','Silber-Kappe'], glow:'rgba(90,150,200,0.07)'  },
+  { name:'Edge',    desc:'Facettiert · kantig · luxuriös',  traits:['100 ml','Kristallglas','Silber-Kappe'], glow:'rgba(160,120,74,0.09)' }
+];
+
+let s4Current = 0, s4Selected = null, s4CurrentSet = 1;
+
+function s4GoTo(idx, fromSwipe) {
+  if (idx < 0 || idx >= S4_VESSELS.length) { s4GoTo(s4Current); return; }
+  const prev = s4Current; s4Current = idx;
+
+  document.getElementById('s4-track').style.transform = `translateX(-${idx*100}%)`;
+  document.querySelectorAll('.s4-slide').forEach((sl,i) => sl.classList.toggle('active', i===idx));
+  document.querySelectorAll('.s4-dot').forEach((d,i)  => d.classList.toggle('active',  i===idx));
+
+  const v = S4_VESSELS[idx];
+  document.getElementById('s4-stage-bg').style.background =
+    `radial-gradient(ellipse at 50% 80%, ${v.glow} 0%, transparent 70%)`;
+
+  if (prev !== idx) {
+    const name = document.getElementById('s4-name');
+    const desc = document.getElementById('s4-desc');
+    name.classList.add('fade'); desc.classList.add('fade');
+    setTimeout(() => {
+      document.getElementById('s4-idx-label').textContent = String(idx+1).padStart(2,'0');
+      name.textContent = v.name;
+      desc.textContent = v.desc;
+      document.getElementById('s4-traits').innerHTML = v.traits.map(t=>`<span class="s4-trait">${t}</span>`).join('');
+      name.classList.remove('fade'); desc.classList.remove('fade');
+    }, 200);
+  }
+
+  const btn = document.getElementById('s4-select-btn');
+  if (s4Selected === idx) {
+    btn.classList.add('confirmed');
+    document.getElementById('s4-select-label').textContent = '✓ ' + v.name + ' gewählt';
+  } else {
+    btn.classList.remove('confirmed');
+    document.getElementById('s4-select-label').textContent = 'Diesen Flakon wählen';
+  }
+  if (fromSwipe || idx !== 0) document.getElementById('s4-swipe-hint').classList.add('hidden');
+
+  // Arrow visibility
+  const al = document.getElementById('s4-arrow-l');
+  const ar = document.getElementById('s4-arrow-r');
+  if (al) al.classList.toggle('hide', idx === 0);
+  if (ar) ar.classList.toggle('hide', idx === S4_VESSELS.length - 1);
+}
+
+function s4Select() {
+  s4Selected = s4Current;
+  const v = S4_VESSELS[s4Current];
+  const btn = document.getElementById('s4-select-btn');
+  btn.classList.add('confirmed');
+  document.getElementById('s4-select-label').textContent = '✓ ' + v.name + ' gewählt';
+  if (window.alchemistState?.sets[s4CurrentSet]) window.alchemistState.sets[s4CurrentSet].vessel = v.name;
+  if (window.showToast) showToast(v.name + ' ausgewählt ✓', 'success');
+  const max = window.alchemistState?.totalSets || 1;
+  setTimeout(() => {
+    if (s4CurrentSet < max) {
+      s4CurrentSet++; s4Selected = null; s4GoTo(0);
+      if (window.showToast) showToast(`Set ${s4CurrentSet} — Flakon wählen`, '');
+    } else {
+      if (typeof navTo === 'function') navTo(4);
+    }
+  }, 700);
+}
+
+/* ── SWIPE ── */
+(function(){
+  const stage = document.getElementById('s4-frame');
+  const track = document.getElementById('s4-track');
+  let sx=0, sy=0, dx=0, axis=null, active=false;
+  const W = () => stage.offsetWidth;
+
+  function start(x,y){ sx=x; sy=y; dx=0; axis=null; active=true; track.classList.add('dragging'); }
+  function move(x,y){
+    if(!active) return;
+    dx=x-sx; const dy=y-sy;
+    if(!axis) axis = (Math.abs(dx)>6||Math.abs(dy)>6) ? (Math.abs(dx)>Math.abs(dy)?'x':'y') : null;
+    if(axis!=='x') return;
+    track.style.transform = `translateX(${-(s4Current*W()-dx)}px)`;
+  }
+  function end(){
+    if(!active) return; active=false; track.classList.remove('dragging');
+    if(axis==='x'){ if(dx<-40) s4GoTo(s4Current+1,true); else if(dx>40) s4GoTo(s4Current-1,true); else s4GoTo(s4Current); }
+    dx=0;
+  }
+  stage.addEventListener('touchstart', e=>start(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+  stage.addEventListener('touchmove',  e=>{ move(e.touches[0].clientX,e.touches[0].clientY); if(axis==='x')e.preventDefault(); },{passive:false});
+  stage.addEventListener('touchend',   end);
+  stage.addEventListener('mousedown',  e=>start(e.clientX,e.clientY));
+  document.addEventListener('mousemove',e=>{ if(active) move(e.clientX,e.clientY); });
+  document.addEventListener('mouseup',  end);
+})();
+
+function initVesselStep() {
+  s4Current=0; s4Selected=null; s4CurrentSet=1;
+  document.getElementById('s4-track').style.transform='translateX(0)';
+  document.querySelectorAll('.s4-slide').forEach((sl,i)=>sl.classList.toggle('active',i===0));
+  document.querySelectorAll('.s4-dot').forEach((d,i)=>d.classList.toggle('active',i===0));
+  document.getElementById('s4-swipe-hint').classList.remove('hidden');
+  const al=document.getElementById('s4-arrow-l'); if(al) al.classList.add('hide');
+  const ar=document.getElementById('s4-arrow-r'); if(ar) ar.classList.remove('hide');
+  document.getElementById('s4-select-btn').classList.remove('confirmed');
+  document.getElementById('s4-select-label').textContent='Diesen Flakon wählen';
+  document.getElementById('s4-idx-label').textContent='01';
+  document.getElementById('s4-name').textContent=S4_VESSELS[0].name;
+  document.getElementById('s4-desc').textContent=S4_VESSELS[0].desc;
+  document.getElementById('s4-traits').innerHTML=S4_VESSELS[0].traits.map(t=>`<span class="s4-trait">${t}</span>`).join('');
+  document.getElementById('s4-stage-bg').style.background=`radial-gradient(ellipse at 50% 80%, ${S4_VESSELS[0].glow} 0%, transparent 70%)`;
+}
+
+initVesselStep();
+</script>

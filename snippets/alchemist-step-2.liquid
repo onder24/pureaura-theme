@@ -1,0 +1,85 @@
+<section style="padding:0; width:100%;">
+
+  <header class="lab-header">
+    <div class="step-eyebrow">02 / 05</div>
+    <h1 class="title">Aroma Vibe</h1>
+    <div class="h-line"></div>
+  </header>
+
+  <p style="font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:18px;font-family:var(--f-mono);">MEHRFACHAUSWAHL MÖGLICH</p>
+
+  <div id="vibe-options" style="padding-bottom: 110px;">
+
+    <button class="neo-option vibe-opt" onclick="handleVibeClick('Floral', this)">
+      <div class="option-body">
+        <span class="label"><span class="id-tag">[FL]</span>&nbsp; Floral</span>
+        <span style="font-family:var(--f-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px;">Jasmin · Rose</span>
+      </div>
+      <div class="details-pane"><p>Elegant & zeitlos. Jasmin, Rose und Maiglöckchen in harmonischer Balance.</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option vibe-opt" onclick="handleVibeClick('Holzig', this)">
+      <div class="option-body">
+        <span class="label"><span class="id-tag">[WD]</span>&nbsp; Holzig</span>
+        <span style="font-family:var(--f-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px;">Sandelholz · Zeder</span>
+      </div>
+      <div class="details-pane"><p>Erdig & beruhigend. Sandelholz, Zeder mit einem Hauch Vetiver.</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option vibe-opt" onclick="handleVibeClick('Frisch', this)">
+      <div class="option-body">
+        <span class="label"><span class="id-tag">[FR]</span>&nbsp; Frisch</span>
+        <span style="font-family:var(--f-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px;">Citrus · Meeresbrise</span>
+      </div>
+      <div class="details-pane"><p>Sauber & energetisch. Spritziger Citrus trifft kühle Meeresnoten.</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option vibe-opt" onclick="handleVibeClick('Gourmand', this)">
+      <div class="option-body">
+        <span class="label"><span class="id-tag">[GD]</span>&nbsp; Gourmand</span>
+        <span style="font-family:var(--f-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px;">Vanille · Honig</span>
+      </div>
+      <div class="details-pane"><p>Verführerisch & weich. Warme Vanille, Honig und Tonkabohne.</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+    <button class="neo-option all-oils-opt" onclick="handleVibeClick('Alle Öle', this, true)" style="border-style:dashed;">
+      <div class="option-body">
+        <span class="label"><span class="id-tag">[ALL]</span>&nbsp; Alle Öle</span>
+        <span style="font-family:var(--f-mono);font-size:9px;color:var(--text-muted);letter-spacing:1px;">Full Access</span>
+      </div>
+      <div class="details-pane"><p>Die volle Erfahrung: Wähle frei aus allen verfügbaren Duftnoten.</p></div>
+      <div class="neo-indicator"></div>
+    </button>
+
+  </div>
+
+  <footer class="lab-footer">
+    <button id="to-oils" class="neo-btn" disabled onclick="navTo(3)">
+      Öle mischen &nbsp;→
+    </button>
+  </footer>
+
+</section>
+
+<script>
+  function handleVibeClick(name, el, isAll = false) {
+    if (isAll) {
+      document.querySelectorAll('#vibe-options .vibe-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.toggle('selected');
+    } else {
+      document.querySelector('.all-oils-opt')?.classList.remove('selected');
+      el.classList.toggle('selected');
+    }
+    const count = document.querySelectorAll('#vibe-options .neo-option.selected').length;
+    document.getElementById('to-oils').disabled = count === 0;
+
+    const vibes = Array.from(document.querySelectorAll('#vibe-options .neo-option.selected'))
+      .map(o => o.getAttribute('onclick').match(/'([^']+)'/)[1]);
+    if (window.alchemistState)
+      window.alchemistState.sets[window.alchemistState.currentActiveSet].vibes = vibes;
+  }
+</script>

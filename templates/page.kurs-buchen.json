@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "workshop-booking": {
+      "type": "workshop-booking",
+      "settings": {}
+    }
+  },
+  "order": ["workshop-booking"]
+}
