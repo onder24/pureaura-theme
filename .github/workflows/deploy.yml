@@ -1,0 +1,48 @@
+name: Deploy theme
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "assets/**"
+      - "blocks/**"
+      - "config/**"
+      - "layout/**"
+      - "locales/**"
+      - "sections/**"
+      - "snippets/**"
+      - "templates/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-theme
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm install -g @shopify/cli@latest
+
+      # JSON files edited in the Shopify theme editor are excluded so live
+      # customizations are never overwritten; push those manually after a pull.
+      - name: Push theme
+        env:
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN }}
+        run: >
+          shopify theme push
+          --store alchemist-9190.myshopify.com
+          --theme 192463765849
+          --allow-live
+          --nodelete
+          --ignore "config/settings_data.json"
+          --ignore "templates/*.json"
+          --ignore "templates/customers/*.json"
+          --ignore "sections/*-group.json"
