@@ -7,11 +7,11 @@ Shopify-Theme umgewandelt; jeder Abschnitt ist dafür als eigener Block aufgebau
 
     npx serve prototype
 
-## Cloudflare Pages
+## Vercel
 
-- Production branch: `prototype`
-- Framework preset: None
-- Build command: leer
-- Build output directory: `prototype`
+- Root Directory: `prototype`
+- Framework Preset: Other
+- Build Command: leer
+- Production Branch: `prototype`
 
-`_headers` setzt `noindex`, damit der Entwurf nicht bei Google landet.
+`vercel.json` setzt `noindex`, damit der Entwurf nicht bei Google landet.
